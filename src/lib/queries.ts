@@ -281,6 +281,73 @@ export async function getNotes(userId: string) {
   return data ?? [];
 }
 
+export async function getBibleBooks() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("bible_books")
+    .select("*")
+    .order("id", { ascending: true });
+  return data ?? [];
+}
+
+export async function getBibleBook(abbrev: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("bible_books")
+    .select("*")
+    .eq("abbrev", abbrev)
+    .maybeSingle();
+  return data;
+}
+
+export async function getBibleChapter(bookId: number, chapter: number) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("bible_verses")
+    .select("*")
+    .eq("book_id", bookId)
+    .eq("chapter", chapter)
+    .order("verse", { ascending: true });
+  return data ?? [];
+}
+
+export interface BibleSearchResult {
+  id: number;
+  chapter: number;
+  verse: number;
+  text: string;
+  book: { abbrev: string; name: string } | null;
+}
+
+export async function searchBibleVerses(
+  query: string,
+  limit = 40,
+): Promise<BibleSearchResult[]> {
+  const supabase = await createClient();
+  const { data: verses } = await supabase
+    .from("bible_verses")
+    .select("id, book_id, chapter, verse, text")
+    .textSearch("text", query, { type: "websearch", config: "portuguese" })
+    .limit(limit);
+
+  if (!verses || verses.length === 0) return [];
+
+  const { data: books } = await supabase
+    .from("bible_books")
+    .select("id, abbrev, name")
+    .in("id", [...new Set(verses.map((v) => v.book_id))]);
+
+  const booksById = new Map((books ?? []).map((b) => [b.id, b]));
+
+  return verses.map((v) => ({
+    id: v.id,
+    chapter: v.chapter,
+    verse: v.verse,
+    text: v.text,
+    book: booksById.get(v.book_id) ?? null,
+  }));
+}
+
 export async function getStats(userId: string) {
   const supabase = await createClient();
 

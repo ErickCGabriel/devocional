@@ -28,6 +28,7 @@ src/
       layout.tsx          sidebar + navegação + gate de autenticação
       painel/              dashboard "Início"
       devocional/          devocional do dia (autosave)
+      biblia/               Bíblia completa: livros, capítulos, busca
       planos/              planos de leitura + planos/[slug]
       calendario/          calendário mensal + streak
       oracao/              pedidos de oração
@@ -48,7 +49,9 @@ src/
     types/database.ts    tipos do banco (gerar via Supabase CLI depois)
 proxy.ts (src/proxy.ts)  refresh de sessão + proteção de rotas
 supabase/
-  migrations/0001_init.sql  schema completo + RLS + triggers
+  migrations/            0001 schema base, 0002 Bíblia, 0003 temas,
+                         0004 banco de perguntas, 0005 favoritos+Bíblia
+  scripts/import-bible.sql  importa o texto da Bíblia (fetch externo)
   seed.sql                  conteúdo de exemplo para desenvolvimento
 ```
 
@@ -70,12 +73,36 @@ completo, incluindo RLS e triggers):
 | `favorites` | Versículos favoritados |
 | `notes` | Anotações livres |
 | `subscriptions` | Plano (free/mensal/anual/vitalicio), status, IDs do Stripe |
+| `bible_books` / `bible_verses` | Bíblia completa (Almeida 1911), buscável |
+| `devotional_questions` | Banco de perguntas de reflexão/aplicação/oração |
+| `user_devotional_answers` | Resposta individual do usuário a cada pergunta sorteada |
 
 Todas as tabelas de dados privados têm **Row Level Security habilitada**,
 restringindo leitura/escrita a `auth.uid() = user_id`. Um trigger em
 `auth.users` cria automaticamente `profiles`, `streaks` e `subscriptions`
 (plano free) para cada novo usuário. Outro trigger recalcula o streak
 sempre que uma entrada de devocional é marcada como concluída.
+
+### Perguntas rotativas
+
+Em vez de campos fixos de texto, cada entrada de devocional sorteia (via
+trigger `handle_new_devotional_entry` + `pick_random_questions`) 3 perguntas
+de reflexão, 2 de aplicação e 3 de oração do banco `devotional_questions` —
+uma vez, na criação da entrada (não muda depois, mesmo com autosave). As
+respostas ficam em `user_devotional_answers`, uma linha por pergunta. Para
+adicionar novas perguntas ao banco, insira em `devotional_questions` com a
+`category` correta (`reflexao`, `aplicacao` ou `oracao`).
+
+### Bíblia
+
+O texto é a **Almeida 1911**, domínio público. **Importante**: a ACF
+(Almeida Corrigida Fiel) e a NVI, comumente usadas "de graça" em projetos
+open source, **não são de domínio público** — são registradas pela
+Sociedade Bíblica Trinitariana e pela Biblica, respectivamente. Usá-las
+num produto pago sem licença é risco real. Se no futuro quiserem um texto
+em português mais atual, as opções são: licenciar via API.Bible/Digital
+Bible Platform, ou negociar licença direto com a SBB/SBTB — nunca reusar
+JSONs de GitHub sem confirmar a licença.
 
 ## Features exclusivas do plano Premium
 
@@ -102,21 +129,28 @@ cp .env.example .env.local
 
 ### 2. Supabase
 
-1. Crie um projeto em [supabase.com](https://supabase.com).
-2. Em **Project Settings > API**, copie `Project URL`, `anon public key` e
-   `service_role key` para `NEXT_PUBLIC_SUPABASE_URL`,
-   `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY`.
-3. Aplique o schema:
-   - Via CLI: `npx supabase link --project-ref <id>` e depois
-     `npx supabase db push` (aplica `supabase/migrations/0001_init.sql`).
-   - Ou cole o conteúdo do arquivo diretamente no **SQL Editor** do painel
-     Supabase.
-4. (Opcional, dev) rode `supabase/seed.sql` no SQL Editor para ter
-   devocionais, versículo da semana e planos de exemplo.
-5. Gere os tipos TypeScript reais (substitui o arquivo manual):
+O projeto já está criado: **meu-devocional** (`nmymympzddcwolwbziud`),
+região `sa-east-1`, dentro da organização Lootfit. Todas as migrations em
+`supabase/migrations/` já foram aplicadas nele, incluindo a Bíblia
+completa (Almeida 1911) e o banco de perguntas rotativas.
+
+1. Em [Project Settings → API](https://supabase.com/dashboard/project/nmymympzddcwolwbziud/settings/api),
+   copie a `anon public key` (legada, formato JWT) e a `service_role key`
+   para `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY` no seu
+   `.env.local` (a URL e a anon key já vêm preenchidas no `.env.local` deste
+   repositório — só falta a `service_role key`, que é secreta e não pode
+   ser obtida por automação).
+2. Novas migrations: crie o arquivo em `supabase/migrations/000N_nome.sql`
+   e aplique via SQL Editor do painel ou `npx supabase db push` (depois de
+   `npx supabase link --project-ref nmymympzddcwolwbziud`).
+3. Gere os tipos TypeScript reais (substitui o arquivo manual):
    ```bash
-   npx supabase gen types typescript --project-id <id> > src/lib/types/database.ts
+   npx supabase gen types typescript --project-id nmymympzddcwolwbziud > src/lib/types/database.ts
    ```
+
+Para criar um projeto **novo** do zero (ex.: ambiente de outro cliente),
+aplique as migrations em ordem e rode `supabase/scripts/import-bible.sql`
+para a Bíblia (ver seção "Bíblia" abaixo).
 
 ### 3. Stripe
 
@@ -156,12 +190,27 @@ Acesse [http://localhost:3000](http://localhost:3000).
 
 ## Deploy (Vercel)
 
+O domínio de produção é **devocional.space**. O projeto Supabase real
+(`meu-devocional`, região `sa-east-1`) já está criado e com o schema
+aplicado — só falta configurar a Vercel:
+
 1. Importe o repositório no [Vercel](https://vercel.com/new).
-2. Configure as mesmas variáveis de ambiente do `.env.local` no painel do
-   projeto (Production e Preview).
-3. Atualize `NEXT_PUBLIC_SITE_URL` para a URL de produção — ela é usada nos
-   redirects do Stripe Checkout.
-4. Aponte o webhook do Stripe para `https://SEU_DOMINIO_VERCEL/api/stripe/webhook`.
+2. Configure as variáveis de ambiente do projeto (Production e Preview):
+   - `NEXT_PUBLIC_SUPABASE_URL=https://nmymympzddcwolwbziud.supabase.co`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — mesma do `.env.local`
+   - `SUPABASE_SERVICE_ROLE_KEY` — pegue em
+     [Project Settings → API](https://supabase.com/dashboard/project/nmymympzddcwolwbziud/settings/api)
+     (não é possível obter essa chave por automação, é secreta)
+   - `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`,
+     `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_MENSAL`, `STRIPE_PRICE_VITALICIO`
+     — ver seção Stripe acima
+   - `NEXT_PUBLIC_SITE_URL=https://devocional.space`
+   - `NEXT_PUBLIC_ADSENSE_CLIENT_ID` (opcional)
+3. Em **Settings → Domains** na Vercel, adicione `devocional.space` e
+   siga as instruções de DNS (o registrador do domínio precisa apontar
+   para a Vercel).
+4. Aponte o webhook do Stripe para
+   `https://devocional.space/api/stripe/webhook`.
 5. Deploy automático a cada push na branch principal.
 
 ## Comandos

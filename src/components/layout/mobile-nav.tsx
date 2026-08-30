@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/painel", label: "Início" },
   { href: "/devocional", label: "Devocional" },
+  { href: "/biblia", label: "Bíblia" },
   { href: "/planos", label: "Planos de leitura" },
   { href: "/calendario", label: "Calendário" },
   { href: "/oracao", label: "Oração por pessoas" },

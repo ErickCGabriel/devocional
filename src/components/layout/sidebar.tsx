@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   BookOpen,
+  BookMarked,
   ListChecks,
   CalendarDays,
   HeartHandshake,
@@ -21,6 +22,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/painel", label: "Início", icon: Home },
   { href: "/devocional", label: "Devocional", icon: BookOpen },
+  { href: "/biblia", label: "Bíblia", icon: BookMarked },
   { href: "/planos", label: "Planos de leitura", icon: ListChecks },
   { href: "/calendario", label: "Calendário", icon: CalendarDays },
   { href: "/oracao", label: "Oração por pessoas", icon: HeartHandshake },

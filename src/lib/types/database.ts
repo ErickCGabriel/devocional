@@ -221,7 +221,7 @@ export interface Database {
           verse_reference: string;
           verse_text: string | null;
           note: string | null;
-          source: "devocional" | "plano" | "manual" | null;
+          source: "devocional" | "plano" | "manual" | "biblia" | null;
           source_id: string | null;
           created_at: string;
         };
