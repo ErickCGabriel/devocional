@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Mail } from "lucide-react";
 import { signUpAction, type AuthActionState } from "@/lib/actions-auth";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
@@ -12,6 +13,15 @@ export function SignUpForm() {
     signUpAction,
     initialState,
   );
+
+  if (state?.message) {
+    return (
+      <div className="mt-6 flex flex-col items-center gap-3 rounded-lg border border-success/30 bg-success/10 p-4 text-center">
+        <Mail size={22} className="text-success" />
+        <p className="text-sm text-foreground/90">{state.message}</p>
+      </div>
+    );
+  }
 
   return (
     <form action={formAction} className="mt-6 space-y-4">

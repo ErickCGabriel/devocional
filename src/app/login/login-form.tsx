@@ -1,8 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
-import { signInAction, type AuthActionState } from "@/lib/actions-auth";
+import {
+  signInAction,
+  resendConfirmationAction,
+  type AuthActionState,
+} from "@/lib/actions-auth";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 
@@ -15,6 +19,16 @@ export function LoginForm() {
     signInAction,
     initialState,
   );
+  const [resendState, setResendState] = useState<AuthActionState | null>(null);
+  const [isResending, startResend] = useTransition();
+
+  function handleResend() {
+    if (!state.unconfirmedEmail) return;
+    startResend(async () => {
+      const result = await resendConfirmationAction(state.unconfirmedEmail!);
+      setResendState(result);
+    });
+  }
 
   return (
     <form action={formAction} className="mt-6 space-y-4">
@@ -42,9 +56,22 @@ export function LoginForm() {
         />
       </div>
       {state?.error && (
-        <p className="text-sm text-red-600" role="alert">
-          {state.error}
-        </p>
+        <div role="alert">
+          <p className="text-sm text-red-600">{state.error}</p>
+          {state.unconfirmedEmail && !resendState?.message && (
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={isResending}
+              className="mt-1 text-sm font-medium text-primary hover:underline"
+            >
+              {isResending ? "Reenviando..." : "Reenviar e-mail de confirmação"}
+            </button>
+          )}
+          {resendState?.message && (
+            <p className="mt-1 text-sm text-success">{resendState.message}</p>
+          )}
+        </div>
       )}
       <Button type="submit" className="w-full" disabled={pending}>
         {pending ? "Entrando..." : "Entrar"}
