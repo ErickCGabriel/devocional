@@ -106,7 +106,10 @@ export default function Home() {
       </main>
 
       <footer className="border-t border-border py-6 text-center text-sm text-muted">
-        Meu Devocional — feito para o seu tempo diário com Deus.
+        <p>Meu Devocional — feito para o seu tempo diário com Deus.</p>
+        <Link href="/privacidade" className="mt-1 inline-block hover:text-foreground">
+          Política de Privacidade
+        </Link>
       </footer>
     </div>
   );

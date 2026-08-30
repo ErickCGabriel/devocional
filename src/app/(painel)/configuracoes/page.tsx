@@ -1,13 +1,12 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getSubscription } from "@/lib/subscription";
-import { updateProfileNameAction } from "@/lib/actions-profile";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input, Label } from "@/components/ui/input";
 import { ThemeSwitcher } from "./theme-switcher";
+import { DeleteAccountSection } from "./delete-account-section";
 import { ManageBillingButton } from "../assinatura/checkout-buttons";
-import Link from "next/link";
 
 export default async function ConfiguracoesPage() {
   const supabase = await createClient();
@@ -29,21 +28,6 @@ export default async function ConfiguracoesPage() {
         </h1>
         <p className="text-sm text-muted">{user.email}</p>
       </div>
-
-      <Card>
-        <h2 className="mb-3 text-sm font-semibold text-foreground">Perfil</h2>
-        <form action={updateProfileNameAction} className="flex items-end gap-3">
-          <div className="flex-1 space-y-1.5">
-            <Label htmlFor="fullName">Nome</Label>
-            <Input
-              id="fullName"
-              name="fullName"
-              defaultValue={profile?.full_name ?? ""}
-            />
-          </div>
-          <Button type="submit">Salvar</Button>
-        </form>
-      </Card>
 
       <Card>
         <h2 className="mb-3 text-sm font-semibold text-foreground">Tema visual</h2>
@@ -68,6 +52,11 @@ export default async function ConfiguracoesPage() {
         ) : (
           <ManageBillingButton />
         )}
+      </Card>
+
+      <Card>
+        <h2 className="mb-3 text-sm font-semibold text-foreground">Zona de perigo</h2>
+        <DeleteAccountSection />
       </Card>
     </div>
   );

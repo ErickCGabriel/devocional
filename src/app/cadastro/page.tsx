@@ -25,6 +25,13 @@ export default function SignUpPage() {
             </Link>
           </p>
         </Card>
+        <p className="mt-4 text-center text-xs text-muted">
+          Ao criar uma conta, você concorda com nossa{" "}
+          <Link href="/privacidade" className="underline hover:text-foreground">
+            Política de Privacidade
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );

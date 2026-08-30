@@ -12,6 +12,7 @@ import {
   StickyNote,
   Star,
   BarChart3,
+  User,
   Settings,
   LogOut,
   Sparkles,
@@ -80,6 +81,18 @@ export function Sidebar({ isPremium }: { isPremium: boolean }) {
       </nav>
 
       <div className="mt-4 flex flex-col gap-1 border-t border-border pt-4">
+        <Link
+          href="/perfil"
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+            pathname === "/perfil"
+              ? "bg-primary text-primary-foreground"
+              : "text-foreground/80 hover:bg-accent-soft",
+          )}
+        >
+          <User size={18} />
+          Perfil
+        </Link>
         <Link
           href="/configuracoes"
           className={cn(

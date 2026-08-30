@@ -18,6 +18,7 @@ const navItems = [
   { href: "/favoritos", label: "Favoritos" },
   { href: "/estatisticas", label: "Estatísticas" },
   { href: "/assinatura", label: "Assinatura" },
+  { href: "/perfil", label: "Perfil" },
   { href: "/configuracoes", label: "Configurações" },
 ];
 
