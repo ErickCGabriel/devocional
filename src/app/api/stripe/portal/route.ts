@@ -27,12 +27,21 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? request.nextUrl.origin;
+  try {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? request.nextUrl.origin;
 
-  const session = await stripe.billingPortal.sessions.create({
-    customer: subscription.stripe_customer_id,
-    return_url: `${siteUrl}/assinatura`,
-  });
+    const session = await stripe.billingPortal.sessions.create({
+      customer: subscription.stripe_customer_id,
+      return_url: `${siteUrl}/assinatura`,
+    });
 
-  return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: session.url });
+  } catch (err) {
+    console.error("Erro ao abrir o portal do Stripe:", err);
+    const message = err instanceof Error ? err.message : "Erro desconhecido";
+    return NextResponse.json(
+      { error: `Não foi possível abrir o portal: ${message}` },
+      { status: 500 },
+    );
+  }
 }
