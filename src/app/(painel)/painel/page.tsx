@@ -7,7 +7,7 @@ import {
   getEntryForDevotional,
   getStreak,
   getWeeklyVerse,
-  getCompletedDatesInMonth,
+  getMonthDayStatus,
   getUserPlanProgress,
   getReadingPlans,
   getPrayerRequests,
@@ -32,7 +32,7 @@ export default async function PainelPage() {
     { devotional },
     streak,
     weeklyVerse,
-    monthCompleted,
+    dayStatus,
     planProgress,
     plans,
     prayerRequests,
@@ -41,14 +41,14 @@ export default async function PainelPage() {
     getTodayDevotional(),
     getStreak(user.id),
     getWeeklyVerse(),
-    getCompletedDatesInMonth(user.id, now.getFullYear(), now.getMonth() + 1),
+    getMonthDayStatus(user.id, now.getFullYear(), now.getMonth() + 1),
     getUserPlanProgress(user.id),
     getReadingPlans(),
     getPrayerRequests(user.id),
   ]);
 
   const entry = devotional ? await getEntryForDevotional(devotional.id, user.id) : null;
-  const completedDates = new Set(monthCompleted.map((e) => e.entry_date));
+  const completedCount = [...dayStatus.values()].filter((s) => s === "completo").length;
 
   const dayOfYear = Math.ceil(
     (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
@@ -70,7 +70,11 @@ export default async function PainelPage() {
     const d = new Date(now);
     d.setDate(d.getDate() - (6 - i));
     const iso = d.toISOString().slice(0, 10);
-    return { iso, weekday: WEEKDAY_LABELS[d.getDay()], done: completedDates.has(iso) || iso === entry?.entry_date && entry?.completed };
+    return {
+      iso,
+      weekday: WEEKDAY_LABELS[d.getDay()],
+      done: dayStatus.get(iso) === "completo" || (iso === entry?.entry_date && entry?.completed),
+    };
   });
 
   const firstName = (profile?.full_name ?? "").split(" ")[0] || "";
@@ -170,7 +174,7 @@ export default async function PainelPage() {
             Calendário
           </div>
           <p className="mt-2 text-sm text-muted">
-            {completedDates.size} dias concluídos este mês
+            {completedCount} dias concluídos este mês
           </p>
           <Link href="/calendario" className="mt-3 block">
             <Button size="sm" variant="secondary" className="w-full">
@@ -200,7 +204,7 @@ export default async function PainelPage() {
           <MonthCalendar
             year={now.getFullYear()}
             month={now.getMonth() + 1}
-            completedDates={completedDates}
+            dayStatus={dayStatus}
             todayISO={todayISO()}
           />
         </Card>

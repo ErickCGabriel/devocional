@@ -127,6 +127,27 @@ export async function getEntryQuestionsWithAnswers(entry: {
   return { reflection, application, prayer };
 }
 
+export async function getEntryByDate(userId: string, entryDate: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("user_devotional_entries")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("entry_date", entryDate)
+    .maybeSingle();
+  return data;
+}
+
+export async function getDevotionalById(devotionalId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("devotionals")
+    .select("*")
+    .eq("id", devotionalId)
+    .maybeSingle();
+  return data;
+}
+
 export async function getStreak(userId: string) {
   const supabase = await createClient();
   const { data } = await supabase
@@ -158,11 +179,14 @@ export async function getWeeklyVerse() {
   return data;
 }
 
-export async function getCompletedDatesInMonth(
+export type DayStatus = "completo" | "parcial";
+
+/** Mapa data (YYYY-MM-DD) → status do devocional naquele dia, para o mês inteiro. */
+export async function getMonthDayStatus(
   userId: string,
   year: number,
   month: number, // 1-12
-) {
+): Promise<Map<string, DayStatus>> {
   const supabase = await createClient();
   const start = `${year}-${String(month).padStart(2, "0")}-01`;
   const endDate = new Date(year, month, 0).getDate();
@@ -173,10 +197,13 @@ export async function getCompletedDatesInMonth(
     .select("entry_date, completed")
     .eq("user_id", userId)
     .gte("entry_date", start)
-    .lte("entry_date", end)
-    .eq("completed", true);
+    .lte("entry_date", end);
 
-  return data ?? [];
+  const map = new Map<string, DayStatus>();
+  for (const row of data ?? []) {
+    map.set(row.entry_date, row.completed ? "completo" : "parcial");
+  }
+  return map;
 }
 
 export async function getReadingPlans() {

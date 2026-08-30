@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser, getCompletedDatesInMonth, getStreak } from "@/lib/queries";
+import { getCurrentUser, getMonthDayStatus, getStreak } from "@/lib/queries";
 import { MonthCalendar } from "@/components/calendar/month-calendar";
 import { Card } from "@/components/ui/card";
 import { todayISO } from "@/lib/utils";
@@ -18,12 +18,10 @@ export default async function CalendarioPage({
   const year = Number(params.year) || now.getFullYear();
   const month = Number(params.month) || now.getMonth() + 1;
 
-  const [entries, streak] = await Promise.all([
-    getCompletedDatesInMonth(user.id, year, month),
+  const [dayStatus, streak] = await Promise.all([
+    getMonthDayStatus(user.id, year, month),
     getStreak(user.id),
   ]);
-
-  const completedDates = new Set(entries.map((e) => e.entry_date));
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -32,7 +30,8 @@ export default async function CalendarioPage({
           Calendário
         </h1>
         <p className="text-sm text-muted">
-          Acompanhe os dias em que você completou seu devocional.
+          Acompanhe os dias em que você completou seu devocional. Clique em
+          um dia para ver o que foi escrito nele.
         </p>
       </div>
 
@@ -55,12 +54,15 @@ export default async function CalendarioPage({
         <MonthCalendar
           year={year}
           month={month}
-          completedDates={completedDates}
+          dayStatus={dayStatus}
           todayISO={todayISO()}
         />
-        <div className="mt-4 flex items-center gap-4 text-xs text-muted">
+        <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-muted">
           <span className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-success/20" /> Concluído
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded-full bg-warning/20" /> Parcial
           </span>
           <span className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-primary" /> Hoje

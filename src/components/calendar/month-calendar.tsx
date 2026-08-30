@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { DayStatus } from "@/lib/queries";
 
 const WEEKDAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
 const MONTH_NAMES = [
@@ -11,13 +12,13 @@ const MONTH_NAMES = [
 export function MonthCalendar({
   year,
   month, // 1-12
-  completedDates,
+  dayStatus,
   todayISO,
   basePath = "/calendario",
 }: {
   year: number;
   month: number;
-  completedDates: Set<string>;
+  dayStatus: Map<string, DayStatus>;
   todayISO: string;
   basePath?: string;
 }) {
@@ -68,19 +69,31 @@ export function MonthCalendar({
           if (day === null) return <div key={`empty-${i}`} />;
           const iso = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
           const isToday = iso === todayISO;
-          const isCompleted = completedDates.has(iso);
-          return (
-            <div
-              key={iso}
+          const isFuture = iso > todayISO;
+          const status = dayStatus.get(iso);
+
+          const dayCell = (
+            <span
               className={cn(
                 "flex aspect-square items-center justify-center rounded-full text-sm",
                 isToday && "bg-primary font-semibold text-primary-foreground",
-                !isToday && isCompleted && "bg-success/20 font-medium text-success",
-                !isToday && !isCompleted && "text-foreground/70",
+                !isToday && status === "completo" && "bg-success/20 font-medium text-success",
+                !isToday && status === "parcial" && "bg-warning/20 font-medium text-warning",
+                !isToday && !status && "text-foreground/70",
               )}
             >
               {day}
-            </div>
+            </span>
+          );
+
+          if (isFuture) {
+            return <div key={iso}>{dayCell}</div>;
+          }
+
+          return (
+            <Link key={iso} href={isToday ? "/devocional" : `/devocional/${iso}`}>
+              {dayCell}
+            </Link>
           );
         })}
       </div>
