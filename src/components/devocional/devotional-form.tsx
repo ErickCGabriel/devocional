@@ -12,6 +12,7 @@ import {
   markDevotionalCompleted,
   type DevotionalEntryFields,
 } from "@/lib/actions-devotional";
+import { StickerPicker } from "@/components/devocional/sticker-picker";
 import type { DevotionalQuestionWithAnswer } from "@/lib/queries";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
@@ -25,6 +26,7 @@ export function DevotionalForm({
   prayerQuestions,
   initialFields,
   alreadyCompleted,
+  initialStickerKey,
 }: {
   entryId: string;
   devotionalId: string;
@@ -34,6 +36,7 @@ export function DevotionalForm({
   prayerQuestions: DevotionalQuestionWithAnswer[];
   initialFields: DevotionalEntryFields;
   alreadyCompleted: boolean;
+  initialStickerKey: string | null;
 }) {
   const [fields, setFields] = useState<DevotionalEntryFields>(initialFields);
   const [status, setStatus] = useState<SaveStatus>("idle");
@@ -137,23 +140,29 @@ export function DevotionalForm({
         />
       </FieldCard>
 
-      <div className="flex flex-col-reverse items-center justify-between gap-3 border-t border-border pt-4 sm:flex-row">
-        <div className="text-sm text-muted">
-          {status === "saving" && "Salvando..."}
-          {status === "saved" && "Alterações salvas automaticamente"}
-          {status === "error" && (
-            <span className="text-red-600">Erro ao salvar. Tente novamente.</span>
-          )}
-          {status === "idle" && (
-            <Link href="/oracao" className="text-primary hover:underline">
-              Ver pedidos de oração →
-            </Link>
-          )}
-        </div>
-        <Button onClick={handleComplete} disabled={isPending || completed}>
+      <div className="flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <StickerPicker
+          devotionalId={devotionalId}
+          entryDate={entryDate}
+          initialStickerKey={initialStickerKey}
+        />
+        <Button onClick={handleComplete} disabled={isPending || completed} className="sm:shrink-0">
           <Check size={16} />
           {completed ? "Devocional concluído" : "Salvar devocional"}
         </Button>
+      </div>
+
+      <div className="text-center text-sm text-muted sm:text-left">
+        {status === "saving" && "Salvando..."}
+        {status === "saved" && "Alterações salvas automaticamente"}
+        {status === "error" && (
+          <span className="text-red-600">Erro ao salvar. Tente novamente.</span>
+        )}
+        {status === "idle" && (
+          <Link href="/oracao" className="text-primary hover:underline">
+            Ver pedidos de oração →
+          </Link>
+        )}
       </div>
     </div>
   );

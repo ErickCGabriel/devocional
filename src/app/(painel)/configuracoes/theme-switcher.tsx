@@ -12,7 +12,10 @@ const FREE_THEMES: { value: Theme; label: string; swatch: string }[] = [
   { value: "masculino", label: "Masculino", swatch: "#18181b" },
 ];
 
-const PREMIUM_THEME_COUNT = 4;
+const PREMIUM_THEMES: { value: Theme; label: string; swatch: string }[] = [
+  { value: "premium_1", label: "Diário Floral", swatch: "#b5406f" },
+];
+const LOCKED_PREMIUM_SLOTS = 3;
 
 export function ThemeSwitcher({
   current,
@@ -59,14 +62,43 @@ export function ThemeSwitcher({
       <div>
         <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-muted">
           <Sparkles size={13} />
-          Mais {PREMIUM_THEME_COUNT} temas exclusivos chegando no plano Premium
+          Temas exclusivos do plano Premium
         </p>
         <div className="grid grid-cols-4 gap-2">
-          {Array.from({ length: PREMIUM_THEME_COUNT }).map((_, i) => (
+          {PREMIUM_THEMES.map((theme) => (
+            <button
+              key={theme.value}
+              type="button"
+              disabled={isPending || !isPremium}
+              onClick={() => handleSelect(theme.value)}
+              title={isPremium ? theme.label : "Exclusivo do plano Premium"}
+              className={cn(
+                "flex h-14 flex-col items-center justify-center gap-1 rounded-lg border text-[11px]",
+                !isPremium && "cursor-not-allowed border-dashed border-border text-muted",
+                isPremium &&
+                  (current === theme.value
+                    ? "border-primary ring-1 ring-primary"
+                    : "border-border"),
+              )}
+            >
+              {isPremium ? (
+                <>
+                  <span
+                    className="h-5 w-5 rounded-full border border-border"
+                    style={{ background: theme.swatch }}
+                  />
+                  <span className="text-foreground">{theme.label}</span>
+                </>
+              ) : (
+                <Lock size={14} />
+              )}
+            </button>
+          ))}
+          {Array.from({ length: LOCKED_PREMIUM_SLOTS }).map((_, i) => (
             <div
               key={i}
               className="flex h-14 items-center justify-center rounded-lg border border-dashed border-border text-muted"
-              title={isPremium ? "Em breve" : "Exclusivo do plano Premium"}
+              title="Em breve"
             >
               <Lock size={14} />
             </div>

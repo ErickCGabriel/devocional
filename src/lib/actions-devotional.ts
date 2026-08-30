@@ -2,10 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { STICKERS } from "@/lib/stickers";
 
 export interface DevotionalEntryFields {
   gratitude?: string;
   notes?: string;
+  sticker_key?: string | null;
 }
 
 export interface DevotionalActionResult {
@@ -66,6 +68,27 @@ export async function autosaveQuestionAnswer(
 
   if (error) return { error: error.message };
   return { success: true };
+}
+
+export async function setEntrySticker(
+  devotionalId: string,
+  entryDate: string,
+  stickerKey: string | null,
+): Promise<DevotionalActionResult> {
+  if (stickerKey !== null && !STICKERS.some((s) => s.key === stickerKey)) {
+    return { error: "Figurinha inválida." };
+  }
+
+  const result = await upsertEntry(devotionalId, entryDate, {
+    sticker_key: stickerKey,
+  });
+
+  if (result.success) {
+    revalidatePath("/devocional");
+    revalidatePath("/calendario");
+  }
+
+  return result;
 }
 
 export async function markDevotionalCompleted(

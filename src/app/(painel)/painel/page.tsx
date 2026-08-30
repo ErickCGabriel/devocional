@@ -81,7 +81,7 @@ export default async function PainelPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-3">
-      <div>
+      <div className="theme-hero-banner -mx-4 rounded-2xl px-4 pb-3 pt-4 md:-mx-8 md:px-8">
         <h1 className="font-serif text-xl font-semibold text-foreground">
           Bom dia{firstName ? `, ${firstName}` : ""}! 💗
         </h1>

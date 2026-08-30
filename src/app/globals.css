@@ -30,7 +30,50 @@
   --warning: #92722e;
 }
 
-/* 4 temas exclusivos do plano premium — paletas a definir. */
+/* Diário Floral — 1º tema exclusivo do plano premium (evolução decorada do Feminino) */
+[data-theme="premium_1"] {
+  --background: #fdf6ef;
+  --foreground: #3a2c2f;
+  --surface: #fffaf4;
+  --border: #f0dfc8;
+  --primary: #b5406f;
+  --primary-foreground: #fff6f8;
+  --accent: #e0a45c;
+  --accent-soft: #fbe9d3;
+  --muted: #8f7b6a;
+  --success: #6a9b6e;
+  --warning: #d99a4e;
+}
+
+[data-theme="premium_1"] .theme-hero-banner {
+  background-image: linear-gradient(to bottom, rgba(255, 250, 244, 0) 55%, var(--surface) 100%),
+    url("/illustrations/hero-banner.svg");
+  background-size: cover;
+  background-position: center;
+}
+
+[data-theme="premium_1"] .theme-journal-card {
+  position: relative;
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 16px 16px;
+  padding-left: 2.75rem;
+}
+
+[data-theme="premium_1"] .theme-journal-card::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 0.85rem;
+  bottom: 0.85rem;
+  width: 2px;
+  background-image: repeating-radial-gradient(
+    circle at 1px 6px,
+    var(--accent) 0 3px,
+    transparent 3px 16px
+  );
+}
+
+/* 3 temas premium restantes — paletas a definir. */
 
 @theme inline {
   --color-background: var(--background);

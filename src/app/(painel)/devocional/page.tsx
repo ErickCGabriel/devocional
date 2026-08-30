@@ -9,6 +9,7 @@ import {
 import { DevotionalForm } from "@/components/devocional/devotional-form";
 import { Card } from "@/components/ui/card";
 import { FavoriteHeartButton } from "@/components/ui/favorite-heart-button";
+import { getSticker } from "@/lib/stickers";
 import { todayISO } from "@/lib/utils";
 
 export default async function DevocionalPage() {
@@ -36,6 +37,7 @@ export default async function DevocionalPage() {
     isFavorited(user.id, "devocional", devotional.id),
   ]);
   const { reflection, application, prayer } = await getEntryQuestionsWithAnswers(entry);
+  const sticker = getSticker(entry.sticker_key);
 
   const formattedDate = new Date(
     devotional.devotional_date + "T00:00:00",
@@ -57,7 +59,7 @@ export default async function DevocionalPage() {
         </p>
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-accent-soft to-surface px-6 py-10 text-center">
+      <div className="theme-hero-banner relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-accent-soft to-surface px-6 py-10 text-center">
         <FavoriteHeartButton
           reference={devotional.verse_reference}
           text={devotional.verse_text}
@@ -66,6 +68,16 @@ export default async function DevocionalPage() {
           initialFavorited={verseFavorited}
           className="absolute right-4 top-4"
         />
+        {sticker && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={sticker.src}
+            alt={sticker.label}
+            width={40}
+            height={40}
+            className="absolute left-4 top-4"
+          />
+        )}
         <p className="font-script text-3xl leading-snug text-primary sm:text-4xl">
           &ldquo;{devotional.verse_text}&rdquo;
         </p>
@@ -82,19 +94,22 @@ export default async function DevocionalPage() {
         <p className="mt-2 text-sm text-foreground/80">{devotional.reading}</p>
       </Card>
 
-      <DevotionalForm
-        entryId={entry.id}
-        devotionalId={devotional.id}
-        entryDate={entryDate}
-        reflectionQuestions={reflection}
-        applicationQuestions={application}
-        prayerQuestions={prayer}
-        alreadyCompleted={entry.completed}
-        initialFields={{
-          gratitude: entry.gratitude ?? "",
-          notes: entry.notes ?? "",
-        }}
-      />
+      <div className="theme-journal-card rounded-2xl">
+        <DevotionalForm
+          entryId={entry.id}
+          devotionalId={devotional.id}
+          entryDate={entryDate}
+          reflectionQuestions={reflection}
+          applicationQuestions={application}
+          prayerQuestions={prayer}
+          alreadyCompleted={entry.completed}
+          initialFields={{
+            gratitude: entry.gratitude ?? "",
+            notes: entry.notes ?? "",
+          }}
+          initialStickerKey={entry.sticker_key}
+        />
+      </div>
     </div>
   );
 }

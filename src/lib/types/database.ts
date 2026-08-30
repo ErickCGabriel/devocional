@@ -72,6 +72,7 @@ export interface Database {
           prayer_question_ids: string[];
           gratitude: string | null;
           notes: string | null;
+          sticker_key: string | null;
           completed: boolean;
           completed_at: string | null;
           created_at: string;

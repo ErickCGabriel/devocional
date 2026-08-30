@@ -8,6 +8,7 @@ import {
   getEntryQuestionsWithAnswers,
 } from "@/lib/queries";
 import { Card, Badge } from "@/components/ui/card";
+import { getSticker } from "@/lib/stickers";
 import { todayISO } from "@/lib/utils";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -54,6 +55,7 @@ export default async function DevocionalHistoricoPage({
     getDevotionalById(entry.devotional_id),
     getEntryQuestionsWithAnswers(entry),
   ]);
+  const sticker = getSticker(entry.sticker_key);
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -65,6 +67,10 @@ export default async function DevocionalHistoricoPage({
       </Link>
 
       <div className="flex items-center gap-2">
+        {sticker && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={sticker.src} alt={sticker.label} width={28} height={28} />
+        )}
         <h1 className="font-serif text-2xl font-semibold text-foreground">
           {formattedDate}
         </h1>
