@@ -75,7 +75,7 @@ export function MonthCalendar({
           const dayCell = (
             <span
               className={cn(
-                "flex aspect-square items-center justify-center rounded-full text-sm",
+                "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm",
                 isToday && "bg-primary font-semibold text-primary-foreground",
                 !isToday && status === "completo" && "bg-success/20 font-medium text-success",
                 !isToday && status === "parcial" && "bg-warning/20 font-medium text-warning",

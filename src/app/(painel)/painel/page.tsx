@@ -80,52 +80,52 @@ export default async function PainelPage() {
   const firstName = (profile?.full_name ?? "").split(" ")[0] || "";
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="mx-auto max-w-6xl space-y-3">
       <div>
-        <h1 className="font-serif text-2xl font-semibold text-foreground">
+        <h1 className="font-serif text-xl font-semibold text-foreground">
           Bom dia{firstName ? `, ${firstName}` : ""}! 💗
         </h1>
         {weeklyVerse && (
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-0.5 text-sm text-muted">
             &ldquo;{weeklyVerse.verse_text}&rdquo; — {weeklyVerse.verse_reference}
           </p>
         )}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="flex flex-col justify-between">
+      <div className="grid gap-3 md:grid-cols-2">
+        <Card className="flex flex-col justify-between p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-primary">
             <BookOpen size={16} />
             Devocional de hoje
           </div>
-          <p className="mt-2 text-lg font-medium text-foreground">
+          <p className="mt-1.5 text-lg font-medium text-foreground">
             {now.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
           </p>
           <p className="text-xs text-muted">
             Dia {dayOfYear} de {isLeap ? 366 : daysInYear}
           </p>
-          <Link href="/devocional" className="mt-4">
+          <Link href="/devocional" className="mt-3">
             <Button className="w-full sm:w-auto">
               {entry?.completed ? "Ver devocional de hoje" : "Começar devocional de hoje →"}
             </Button>
           </Link>
         </Card>
 
-        <Card>
+        <Card className="p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-primary">
             <Flame size={16} />
             Sequência atual
           </div>
-          <p className="mt-2 text-2xl font-semibold text-foreground">
+          <p className="mt-1.5 text-2xl font-semibold text-foreground">
             {streak.current_streak} {streak.current_streak === 1 ? "dia" : "dias"}
           </p>
           <p className="text-xs text-muted">Vamos continuar!</p>
-          <div className="mt-3 grid grid-cols-7 gap-1 text-center text-xs text-muted">
+          <div className="mt-2 grid grid-cols-7 gap-1 text-center text-xs text-muted">
             {last7.map((d) => (
               <div key={d.iso} className="flex flex-col items-center gap-1">
                 <span>{d.weekday}</span>
                 <span
-                  className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] ${
+                  className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] ${
                     d.done ? "bg-success text-white" : "bg-accent-soft text-muted"
                   }`}
                 >
@@ -137,15 +137,15 @@ export default async function PainelPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Card className="p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-primary">
             <BookOpen size={16} />
             Plano atual
           </div>
           {activePlan ? (
             <>
-              <p className="mt-2 text-sm font-medium text-foreground">
+              <p className="mt-1.5 text-sm font-medium text-foreground">
                 {activePlan.reading_plan?.title}
               </p>
               <p className="text-xs text-muted">
@@ -159,39 +159,39 @@ export default async function PainelPage() {
               </p>
             </>
           ) : (
-            <p className="mt-2 text-sm text-muted">Nenhum plano iniciado.</p>
+            <p className="mt-1.5 text-sm text-muted">Nenhum plano iniciado.</p>
           )}
-          <Link href="/planos" className="mt-3 block">
+          <Link href="/planos" className="mt-2 block">
             <Button size="sm" variant="secondary" className="w-full">
               Ver plano
             </Button>
           </Link>
         </Card>
 
-        <Card>
+        <Card className="p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-primary">
             <CalendarDays size={16} />
             Calendário
           </div>
-          <p className="mt-2 text-sm text-muted">
+          <p className="mt-1.5 text-sm text-muted">
             {completedCount} dias concluídos este mês
           </p>
-          <Link href="/calendario" className="mt-3 block">
+          <Link href="/calendario" className="mt-2 block">
             <Button size="sm" variant="secondary" className="w-full">
               Ver calendário
             </Button>
           </Link>
         </Card>
 
-        <Card>
+        <Card className="p-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-primary">
             <HeartHandshake size={16} />
             Oração por pessoas
           </div>
-          <p className="mt-2 text-sm text-muted">
+          <p className="mt-1.5 text-sm text-muted">
             {activePrayers.length} pedidos ativos · {answeredPrayers.length} respondidos
           </p>
-          <Link href="/oracao" className="mt-3 block">
+          <Link href="/oracao" className="mt-2 block">
             <Button size="sm" variant="secondary" className="w-full">
               Ver pedidos
             </Button>
@@ -199,8 +199,8 @@ export default async function PainelPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+      <div className="grid gap-3 lg:grid-cols-2">
+        <Card className="p-4">
           <MonthCalendar
             year={now.getFullYear()}
             month={now.getMonth() + 1}
@@ -210,14 +210,14 @@ export default async function PainelPage() {
         </Card>
 
         {weeklyVerse && (
-          <Card>
+          <Card className="p-4">
             <div className="text-xs font-semibold uppercase tracking-wide text-primary">
               Versículo da semana
             </div>
-            <p className="mt-3 font-script text-2xl leading-snug text-foreground">
+            <p className="mt-2 font-script text-xl leading-snug text-foreground">
               &ldquo;{weeklyVerse.verse_text}&rdquo;
             </p>
-            <p className="mt-2 text-sm font-medium text-muted">
+            <p className="mt-1.5 text-sm font-medium text-muted">
               {weeklyVerse.verse_reference}
             </p>
           </Card>
@@ -225,11 +225,11 @@ export default async function PainelPage() {
       </div>
 
       {suggestedPlan && (
-        <Card className="flex flex-col items-center justify-between gap-4 bg-accent-soft/60 sm:flex-row">
+        <Card className="flex flex-col items-center justify-between gap-3 bg-accent-soft/60 p-4 sm:flex-row">
           <div className="flex items-center gap-3">
-            <Sparkles size={22} className="shrink-0 text-primary" />
+            <Sparkles size={20} className="shrink-0 text-primary" />
             <div>
-              <p className="font-serif text-lg font-semibold text-foreground">
+              <p className="font-serif text-base font-semibold text-foreground">
                 Dica de plano para você
               </p>
               <p className="text-sm text-muted">
@@ -238,7 +238,7 @@ export default async function PainelPage() {
             </div>
           </div>
           <Link href={`/planos/${suggestedPlan.slug}`}>
-            <Button className="shrink-0">Ver plano</Button>
+            <Button size="sm" className="shrink-0">Ver plano</Button>
           </Link>
         </Card>
       )}
