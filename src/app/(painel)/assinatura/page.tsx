@@ -77,7 +77,7 @@ export default async function AssinaturaPage({
           <Badge className="mb-1">Popular</Badge>
           <h2 className="font-serif text-lg font-semibold">Premium mensal</h2>
           <p className="mt-1 text-2xl font-semibold text-foreground">
-            R$ 19,90<span className="text-sm font-normal text-muted">/mês</span>
+            R$ 9,90<span className="text-sm font-normal text-muted">/mês</span>
           </p>
           <ul className="mt-4 space-y-2 text-sm text-foreground/80">
             {PREMIUM_FEATURES.map((f) => (
@@ -99,7 +99,7 @@ export default async function AssinaturaPage({
         <Card>
           <h2 className="font-serif text-lg font-semibold">Premium vitalício</h2>
           <p className="mt-1 text-2xl font-semibold text-foreground">
-            R$ 249<span className="text-sm font-normal text-muted"> pagamento único</span>
+            R$ 250<span className="text-sm font-normal text-muted"> pagamento único</span>
           </p>
           <ul className="mt-4 space-y-2 text-sm text-foreground/80">
             {PREMIUM_FEATURES.map((f) => (
