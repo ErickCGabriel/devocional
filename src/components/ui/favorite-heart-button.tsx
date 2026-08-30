@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Heart } from "lucide-react";
-import { quickFavoriteAction } from "@/lib/actions-favorites";
+import { toggleFavoriteAction } from "@/lib/actions-favorites";
 import { cn } from "@/lib/utils";
 
 export function FavoriteHeartButton({
@@ -24,10 +24,10 @@ export function FavoriteHeartButton({
   const [isPending, startTransition] = useTransition();
 
   function handleClick() {
-    if (favorited || isPending) return;
+    if (isPending) return;
     startTransition(async () => {
-      const result = await quickFavoriteAction(reference, text, source, sourceId);
-      if (!result.error) setFavorited(true);
+      const result = await toggleFavoriteAction(reference, text, source, sourceId);
+      if (!result.error) setFavorited(!!result.favorited);
     });
   }
 
@@ -35,9 +35,9 @@ export function FavoriteHeartButton({
     <button
       type="button"
       onClick={handleClick}
-      disabled={isPending || favorited}
-      title={favorited ? "Nos seus favoritos" : "Favoritar"}
-      className={cn("text-primary hover:opacity-70 disabled:hover:opacity-100", className)}
+      disabled={isPending}
+      title={favorited ? "Remover dos favoritos" : "Favoritar"}
+      className={cn("text-primary hover:opacity-70 disabled:opacity-60", className)}
     >
       <Heart size={18} fill={favorited ? "currentColor" : "none"} />
     </button>

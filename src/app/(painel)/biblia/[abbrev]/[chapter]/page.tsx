@@ -1,9 +1,14 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
-import { getCurrentUser, getBibleBook, getBibleChapter } from "@/lib/queries";
+import {
+  getCurrentUser,
+  getBibleBook,
+  getBibleChapter,
+  getFavoritedSourceIds,
+} from "@/lib/queries";
 import { Card } from "@/components/ui/card";
-import { FavoriteVerseButton } from "@/components/biblia/favorite-verse-button";
+import { FavoriteHeartButton } from "@/components/ui/favorite-heart-button";
 
 export default async function BibliaCapituloPage({
   params,
@@ -21,6 +26,12 @@ export default async function BibliaCapituloPage({
 
   const verses = await getBibleChapter(book.id, chapterNumber);
   if (verses.length === 0) notFound();
+
+  const favoritedIds = await getFavoritedSourceIds(
+    user.id,
+    "biblia",
+    verses.map((v) => String(v.id)),
+  );
 
   const prevChapter = chapterNumber > 1 ? chapterNumber - 1 : null;
   const nextChapter = chapterNumber < book.chapter_count ? chapterNumber + 1 : null;
@@ -73,10 +84,13 @@ export default async function BibliaCapituloPage({
               <span className="mr-1.5 text-xs font-semibold text-primary">{v.verse}</span>
               {v.text}
             </p>
-            <FavoriteVerseButton
-              verseId={v.id}
+            <FavoriteHeartButton
               reference={`${book.name} ${chapterNumber}:${v.verse}`}
               text={v.text}
+              source="biblia"
+              sourceId={String(v.id)}
+              initialFavorited={favoritedIds.has(String(v.id))}
+              className="shrink-0"
             />
           </div>
         ))}

@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getCurrentUser, searchBibleVerses } from "@/lib/queries";
+import { getCurrentUser, searchBibleVerses, getFavoritedSourceIds } from "@/lib/queries";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FavoriteVerseButton } from "@/components/biblia/favorite-verse-button";
+import { FavoriteHeartButton } from "@/components/ui/favorite-heart-button";
 
 export default async function BibliaBuscarPage({
   searchParams,
@@ -18,6 +18,11 @@ export default async function BibliaBuscarPage({
   const { q } = await searchParams;
   const query = (q ?? "").trim();
   const results = query ? await searchBibleVerses(query) : [];
+  const favoritedIds = await getFavoritedSourceIds(
+    user.id,
+    "biblia",
+    results.map((v) => String(v.id)),
+  );
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -53,10 +58,13 @@ export default async function BibliaBuscarPage({
               </Link>
               <p className="mt-1 text-sm text-foreground/90">{v.text}</p>
             </div>
-            <FavoriteVerseButton
-              verseId={v.id}
+            <FavoriteHeartButton
               reference={`${v.book?.name} ${v.chapter}:${v.verse}`}
               text={v.text}
+              source="biblia"
+              sourceId={String(v.id)}
+              initialFavorited={favoritedIds.has(String(v.id))}
+              className="shrink-0"
             />
           </Card>
         ))}

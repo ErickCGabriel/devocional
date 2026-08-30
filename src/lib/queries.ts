@@ -424,6 +424,22 @@ export async function isFavorited(
   return !!data;
 }
 
+export async function getFavoritedSourceIds(
+  userId: string,
+  source: "devocional" | "biblia",
+  sourceIds: string[],
+): Promise<Set<string>> {
+  if (sourceIds.length === 0) return new Set();
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("favorites")
+    .select("source_id")
+    .eq("user_id", userId)
+    .eq("source", source)
+    .in("source_id", sourceIds);
+  return new Set((data ?? []).map((f) => f.source_id).filter((id): id is string => !!id));
+}
+
 export async function getFavorites(userId: string) {
   const supabase = await createClient();
   const { data } = await supabase

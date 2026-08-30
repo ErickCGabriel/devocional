@@ -46,13 +46,17 @@ export async function addFavoriteAction(
   return {};
 }
 
-/** Favoritar rápido (sem formulário) — usado no botão de coração do devocional do dia. */
-export async function quickFavoriteAction(
+/**
+ * Alterna favorito (sem formulário) — usado no botão de coração/estrela do
+ * devocional do dia e da leitura da Bíblia. Se já estiver favoritado,
+ * remove; senão, adiciona.
+ */
+export async function toggleFavoriteAction(
   verseReference: string,
   verseText: string,
   source: "devocional" | "biblia",
   sourceId: string,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; favorited?: boolean }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -66,7 +70,17 @@ export async function quickFavoriteAction(
     .eq("source", source)
     .eq("source_id", sourceId)
     .maybeSingle();
-  if (existing) return {};
+
+  if (existing) {
+    const { error } = await supabase
+      .from("favorites")
+      .delete()
+      .eq("id", existing.id)
+      .eq("user_id", user.id);
+    if (error) return { error: error.message };
+    revalidatePath("/favoritos");
+    return { favorited: false };
+  }
 
   const subscription = await getSubscription();
   if (!subscription.isPremium) {
@@ -91,7 +105,7 @@ export async function quickFavoriteAction(
 
   if (error) return { error: error.message };
   revalidatePath("/favoritos");
-  return {};
+  return { favorited: true };
 }
 
 export async function deleteFavoriteAction(id: string) {
