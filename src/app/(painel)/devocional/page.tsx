@@ -4,9 +4,11 @@ import {
   getTodayDevotional,
   getOrCreateEntry,
   getEntryQuestionsWithAnswers,
+  isFavorited,
 } from "@/lib/queries";
 import { DevotionalForm } from "@/components/devocional/devotional-form";
 import { Card } from "@/components/ui/card";
+import { FavoriteHeartButton } from "@/components/ui/favorite-heart-button";
 import { todayISO } from "@/lib/utils";
 
 export default async function DevocionalPage() {
@@ -29,7 +31,10 @@ export default async function DevocionalPage() {
   }
 
   const entryDate = todayISO();
-  const entry = await getOrCreateEntry(devotional.id, user.id, entryDate);
+  const [entry, verseFavorited] = await Promise.all([
+    getOrCreateEntry(devotional.id, user.id, entryDate),
+    isFavorited(user.id, "devocional", devotional.id),
+  ]);
   const { reflection, application, prayer } = await getEntryQuestionsWithAnswers(entry);
 
   const formattedDate = new Date(
@@ -52,7 +57,15 @@ export default async function DevocionalPage() {
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-accent-soft to-surface px-6 py-10 text-center">
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-accent-soft to-surface px-6 py-10 text-center">
+        <FavoriteHeartButton
+          reference={devotional.verse_reference}
+          text={devotional.verse_text}
+          source="devocional"
+          sourceId={devotional.id}
+          initialFavorited={verseFavorited}
+          className="absolute right-4 top-4"
+        />
         <p className="font-script text-3xl leading-snug text-primary sm:text-4xl">
           &ldquo;{devotional.verse_text}&rdquo;
         </p>

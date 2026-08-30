@@ -408,6 +408,22 @@ export async function getStats(userId: string) {
   };
 }
 
+export async function isFavorited(
+  userId: string,
+  source: "devocional" | "biblia",
+  sourceId: string,
+) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("favorites")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("source", source)
+    .eq("source_id", sourceId)
+    .maybeSingle();
+  return !!data;
+}
+
 export async function getFavorites(userId: string) {
   const supabase = await createClient();
   const { data } = await supabase
