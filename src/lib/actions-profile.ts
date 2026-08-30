@@ -27,7 +27,8 @@ export async function updateThemeAction(theme: Theme) {
   } = await supabase.auth.getUser();
   if (!user) return;
 
-  if (theme !== "padrao") {
+  const isFree = theme === "feminino" || theme === "masculino";
+  if (!isFree) {
     const subscription = await getSubscription();
     if (!subscription.isPremium) return;
   }

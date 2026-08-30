@@ -29,7 +29,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let theme = "padrao";
+  let theme = "feminino";
 
   try {
     const supabase = await createClient();

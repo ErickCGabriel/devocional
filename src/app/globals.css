@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Feminino — tema padrão gratuito (rosa/mauve) */
 :root {
   --background: #fbf3f2;
   --foreground: #3a2c2f;
@@ -14,33 +15,22 @@
   --warning: #d99a4e;
 }
 
-[data-theme="escuro"] {
-  --background: #201417;
-  --foreground: #f3e6e8;
-  --surface: #2b1c1f;
-  --border: #4a3236;
-  --primary: #e58aa3;
-  --primary-foreground: #241014;
-  --accent: #e58aa3;
-  --accent-soft: #3a262a;
-  --muted: #b89ba0;
-  --success: #7fb884;
-  --warning: #e0ab6a;
+/* Masculino — segundo tema gratuito (preto, branco e cinza) */
+[data-theme="masculino"] {
+  --background: #f4f4f5;
+  --foreground: #18181b;
+  --surface: #ffffff;
+  --border: #dcdce0;
+  --primary: #18181b;
+  --primary-foreground: #ffffff;
+  --accent: #52525b;
+  --accent-soft: #e4e4e7;
+  --muted: #6b6b70;
+  --success: #3f7a45;
+  --warning: #92722e;
 }
 
-[data-theme="sepia"] {
-  --background: #f3e9db;
-  --foreground: #3d2f27;
-  --surface: #f9f1e4;
-  --border: #dfc9ab;
-  --primary: #8a4a3d;
-  --primary-foreground: #fbf1e2;
-  --accent: #b5745f;
-  --accent-soft: #ecd9c4;
-  --muted: #7d6a5a;
-  --success: #6a8f5f;
-  --warning: #c18a3e;
-}
+/* 4 temas exclusivos do plano premium — paletas a definir. */
 
 @theme inline {
   --color-background: var(--background);

@@ -16,7 +16,7 @@ const PREMIUM_FEATURES = [
   "Sem anúncios",
   "Todos os planos de leitura liberados",
   "Notas e favoritos ilimitados",
-  "Temas visuais (sépia e escuro)",
+  "4 temas visuais exclusivos",
   "Histórico completo de sequência",
 ];
 

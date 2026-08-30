@@ -5,7 +5,13 @@
 export type SubscriptionPlan = "free" | "mensal" | "anual" | "vitalicio";
 export type SubscriptionStatus = "active" | "canceled" | "past_due" | "incomplete";
 export type PrayerRequestStatus = "ativo" | "respondido";
-export type Theme = "padrao" | "sepia" | "escuro";
+export type Theme =
+  | "feminino"
+  | "masculino"
+  | "premium_1"
+  | "premium_2"
+  | "premium_3"
+  | "premium_4";
 
 export interface Database {
   public: {
@@ -61,9 +67,9 @@ export interface Database {
           user_id: string;
           devotional_id: string;
           entry_date: string;
-          reflection: string | null;
-          application: string | null;
-          prayer: string | null;
+          reflection_question_ids: string[];
+          application_question_ids: string[];
+          prayer_question_ids: string[];
           gratitude: string | null;
           notes: string | null;
           completed: boolean;
@@ -80,6 +86,41 @@ export interface Database {
         };
         Update: Partial<
           Database["public"]["Tables"]["user_devotional_entries"]["Row"]
+        >;
+        Relationships: [];
+      };
+      devotional_questions: {
+        Row: {
+          id: string;
+          category: "reflexao" | "aplicacao" | "oracao";
+          question: string;
+          active: boolean;
+          created_at: string;
+        };
+        Insert: Partial<
+          Database["public"]["Tables"]["devotional_questions"]["Row"]
+        >;
+        Update: Partial<
+          Database["public"]["Tables"]["devotional_questions"]["Row"]
+        >;
+        Relationships: [];
+      };
+      user_devotional_answers: {
+        Row: {
+          id: string;
+          entry_id: string;
+          question_id: string;
+          answer: string | null;
+          updated_at: string;
+        };
+        Insert: Partial<
+          Database["public"]["Tables"]["user_devotional_answers"]["Row"]
+        > & {
+          entry_id: string;
+          question_id: string;
+        };
+        Update: Partial<
+          Database["public"]["Tables"]["user_devotional_answers"]["Row"]
         >;
         Relationships: [];
       };
@@ -223,6 +264,30 @@ export interface Database {
           user_id: string;
         };
         Update: Partial<Database["public"]["Tables"]["subscriptions"]["Row"]>;
+        Relationships: [];
+      };
+      bible_books: {
+        Row: {
+          id: number;
+          abbrev: string;
+          name: string;
+          testament: "AT" | "NT";
+          chapter_count: number;
+        };
+        Insert: Partial<Database["public"]["Tables"]["bible_books"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["bible_books"]["Row"]>;
+        Relationships: [];
+      };
+      bible_verses: {
+        Row: {
+          id: number;
+          book_id: number;
+          chapter: number;
+          verse: number;
+          text: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["bible_verses"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["bible_verses"]["Row"]>;
         Relationships: [];
       };
     };

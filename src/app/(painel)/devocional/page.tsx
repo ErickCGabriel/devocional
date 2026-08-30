@@ -2,10 +2,12 @@ import { redirect } from "next/navigation";
 import {
   getCurrentUser,
   getTodayDevotional,
-  getEntryForDevotional,
+  getOrCreateEntry,
+  getEntryQuestionsWithAnswers,
 } from "@/lib/queries";
 import { DevotionalForm } from "@/components/devocional/devotional-form";
 import { Card } from "@/components/ui/card";
+import { todayISO } from "@/lib/utils";
 
 export default async function DevocionalPage() {
   const user = await getCurrentUser();
@@ -26,8 +28,9 @@ export default async function DevocionalPage() {
     );
   }
 
-  const entry = await getEntryForDevotional(devotional.id, user.id);
-  const entryDate = entry?.entry_date ?? devotional.devotional_date;
+  const entryDate = todayISO();
+  const entry = await getOrCreateEntry(devotional.id, user.id, entryDate);
+  const { reflection, application, prayer } = await getEntryQuestionsWithAnswers(entry);
 
   const formattedDate = new Date(
     devotional.devotional_date + "T00:00:00",
@@ -67,15 +70,16 @@ export default async function DevocionalPage() {
       </Card>
 
       <DevotionalForm
+        entryId={entry.id}
         devotionalId={devotional.id}
         entryDate={entryDate}
-        alreadyCompleted={entry?.completed ?? false}
-        initial={{
-          reflection: entry?.reflection ?? "",
-          application: entry?.application ?? "",
-          prayer: entry?.prayer ?? "",
-          gratitude: entry?.gratitude ?? "",
-          notes: entry?.notes ?? "",
+        reflectionQuestions={reflection}
+        applicationQuestions={application}
+        prayerQuestions={prayer}
+        alreadyCompleted={entry.completed}
+        initialFields={{
+          gratitude: entry.gratitude ?? "",
+          notes: entry.notes ?? "",
         }}
       />
     </div>

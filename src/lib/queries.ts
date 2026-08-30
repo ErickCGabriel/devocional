@@ -44,6 +44,89 @@ export async function getEntryForDevotional(devotionalId: string, userId: string
   return data;
 }
 
+/**
+ * Retorna a entrada do dia, criando-a se ainda não existir. A criação
+ * dispara o trigger que sorteia as perguntas de reflexão/aplicação/oração
+ * daquele dia (ver migration 0004_question_bank.sql).
+ */
+export async function getOrCreateEntry(
+  devotionalId: string,
+  userId: string,
+  entryDate: string,
+) {
+  const existing = await getEntryForDevotional(devotionalId, userId);
+  if (existing) return existing;
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("user_devotional_entries")
+    .insert({ user_id: userId, devotional_id: devotionalId, entry_date: entryDate })
+    .select("*")
+    .single();
+
+  if (error) {
+    // condição de corrida rara (dois inserts simultâneos) — a linha já existe
+    const retry = await getEntryForDevotional(devotionalId, userId);
+    if (retry) return retry;
+    throw error;
+  }
+
+  return data;
+}
+
+export interface DevotionalQuestionWithAnswer {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+async function getQuestionsWithAnswers(
+  questionIds: string[],
+  answersByQuestionId: Map<string, string>,
+): Promise<DevotionalQuestionWithAnswer[]> {
+  if (questionIds.length === 0) return [];
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("devotional_questions")
+    .select("id, question")
+    .in("id", questionIds);
+
+  const byId = new Map((data ?? []).map((q) => [q.id, q.question]));
+
+  return questionIds
+    .filter((id) => byId.has(id))
+    .map((id) => ({
+      id,
+      question: byId.get(id)!,
+      answer: answersByQuestionId.get(id) ?? "",
+    }));
+}
+
+export async function getEntryQuestionsWithAnswers(entry: {
+  id: string;
+  reflection_question_ids: string[];
+  application_question_ids: string[];
+  prayer_question_ids: string[];
+}) {
+  const supabase = await createClient();
+  const { data: answers } = await supabase
+    .from("user_devotional_answers")
+    .select("question_id, answer")
+    .eq("entry_id", entry.id);
+
+  const answersByQuestionId = new Map(
+    (answers ?? []).map((a) => [a.question_id, a.answer ?? ""]),
+  );
+
+  const [reflection, application, prayer] = await Promise.all([
+    getQuestionsWithAnswers(entry.reflection_question_ids, answersByQuestionId),
+    getQuestionsWithAnswers(entry.application_question_ids, answersByQuestionId),
+    getQuestionsWithAnswers(entry.prayer_question_ids, answersByQuestionId),
+  ]);
+
+  return { reflection, application, prayer };
+}
+
 export async function getStreak(userId: string) {
   const supabase = await createClient();
   const { data } = await supabase

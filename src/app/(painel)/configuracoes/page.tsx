@@ -48,7 +48,7 @@ export default async function ConfiguracoesPage() {
       <Card>
         <h2 className="mb-3 text-sm font-semibold text-foreground">Tema visual</h2>
         <ThemeSwitcher
-          current={profile?.theme ?? "padrao"}
+          current={profile?.theme ?? "feminino"}
           isPremium={subscription.isPremium}
         />
       </Card>

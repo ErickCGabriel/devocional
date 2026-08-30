@@ -86,7 +86,7 @@ aplicadas em cada página:
 - **Todos os planos de leitura** liberados (planos com `is_premium = true`
   ficam bloqueados no free — ver `app/(painel)/planos`)
 - **Notas e favoritos ilimitados** (free: 20 cada — `src/lib/limits.ts`)
-- **Temas visuais** sépia e escuro (free: só o padrão —
+- **Temas visuais** exclusivos (free: só Feminino e Masculino —
   `app/(painel)/configuracoes/theme-switcher.tsx`)
 - **Histórico/estatísticas avançadas** (placeholder em `/estatisticas`)
 

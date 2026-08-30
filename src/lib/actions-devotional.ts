@@ -4,9 +4,6 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 export interface DevotionalEntryFields {
-  reflection?: string;
-  application?: string;
-  prayer?: string;
   gratitude?: string;
   notes?: string;
 }
@@ -48,6 +45,27 @@ export async function autosaveDevotionalEntry(
   fields: DevotionalEntryFields,
 ): Promise<DevotionalActionResult> {
   return upsertEntry(devotionalId, entryDate, fields);
+}
+
+/** Autosave da resposta de uma pergunta individual (reflexão/aplicação/oração). */
+export async function autosaveQuestionAnswer(
+  entryId: string,
+  questionId: string,
+  answer: string,
+): Promise<DevotionalActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Sessão expirada. Faça login novamente." };
+
+  const { error } = await supabase.from("user_devotional_answers").upsert(
+    { entry_id: entryId, question_id: questionId, answer },
+    { onConflict: "entry_id,question_id" },
+  );
+
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 export async function markDevotionalCompleted(
