@@ -57,9 +57,9 @@ export function Sidebar({ isPremium }: { isPremium: boolean }) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                 active
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-primary-foreground shadow-soft"
                   : "text-foreground/80 hover:bg-accent-soft",
               )}
             >
@@ -84,9 +84,9 @@ export function Sidebar({ isPremium }: { isPremium: boolean }) {
         <Link
           href="/perfil"
           className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
             pathname === "/perfil"
-              ? "bg-primary text-primary-foreground"
+              ? "bg-primary text-primary-foreground shadow-soft"
               : "text-foreground/80 hover:bg-accent-soft",
           )}
         >
@@ -96,9 +96,9 @@ export function Sidebar({ isPremium }: { isPremium: boolean }) {
         <Link
           href="/configuracoes"
           className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
             pathname === "/configuracoes"
-              ? "bg-primary text-primary-foreground"
+              ? "bg-primary text-primary-foreground shadow-soft"
               : "text-foreground/80 hover:bg-accent-soft",
           )}
         >
