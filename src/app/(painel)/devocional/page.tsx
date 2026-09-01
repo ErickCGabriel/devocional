@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Anchor, Star, Mountain } from "lucide-react";
+import { Anchor, Star, Mountain, Flower2 } from "lucide-react";
 import {
   getCurrentUser,
   getTodayDevotional,
@@ -66,27 +66,34 @@ export default async function DevocionalPage() {
       />
 
       <div className="theme-hero-banner relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-accent-soft to-surface px-6 py-10 text-center">
+        <Flower2
+          aria-hidden
+          data-symbol="flower"
+          size={120}
+          strokeWidth={1}
+          className="theme-symbol-accent absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 text-accent/15"
+        />
         <Anchor
           aria-hidden
           data-symbol="anchor"
-          size={140}
+          size={120}
           strokeWidth={1}
-          className="theme-symbol-accent absolute -bottom-6 left-1/2 -translate-x-1/2 text-accent/15"
+          className="theme-symbol-accent absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 text-accent/15"
         />
         <Star
           aria-hidden
           data-symbol="star"
-          size={130}
+          size={110}
           strokeWidth={1}
           fill="currentColor"
-          className="theme-symbol-accent absolute -bottom-6 left-1/2 -translate-x-1/2 text-primary/10"
+          className="theme-symbol-accent absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 text-primary/10"
         />
         <Mountain
           aria-hidden
           data-symbol="mountain"
-          size={130}
+          size={110}
           strokeWidth={1}
-          className="theme-symbol-accent absolute -bottom-6 left-1/2 -translate-x-1/2 text-primary/10"
+          className="theme-symbol-accent absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 text-primary/10"
         />
         <FavoriteHeartButton
           reference={devotional.verse_reference}

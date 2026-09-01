@@ -38,22 +38,25 @@
   --error-soft: #fef2f2;
 }
 
-/* Diário Floral — 1º tema exclusivo do plano premium (evolução decorada do Feminino) */
+/* Jardim Noturno — 1º tema exclusivo do plano premium (modo escuro floral:
+   jardim ao luar, ameixa profundo + rosa e dourado. Antigo "Diário Floral",
+   escurecido para equilibrar a dupla clara/escura do plano: Maré e Monte
+   claros, Jardim Noturno e Noite Estrelada escuros) */
 [data-theme="premium_1"] {
-  --background: #fdf6ef;
-  --foreground: #3a2c2f;
-  --surface: #fffaf4;
-  --border: #f0dfc8;
-  --primary: #b5406f;
-  --primary-foreground: #fff6f8;
+  --background: #241220;
+  --foreground: #f5e6ef;
+  --surface: #2f1a2b;
+  --border: rgba(255, 255, 255, 0.12);
+  --primary: #e893b3;
+  --primary-foreground: #2b0f1f;
   --accent: #e0a45c;
-  --accent-soft: #fbe9d3;
-  --muted: #8f7b6a;
-  --success: #6a9b6e;
-  --warning: #d99a4e;
-  --error: #dc2626;
-  --error-foreground: #ffffff;
-  --error-soft: #fef2f2;
+  --accent-soft: #3d2531;
+  --muted: #c7a8bb;
+  --success: #7cd992;
+  --warning: #f0b45c;
+  --error: #f87171;
+  --error-foreground: #3f0d0d;
+  --error-soft: rgba(248, 113, 113, 0.15);
 }
 
 /* Maré — 2º tema exclusivo do plano premium (azul claro, referências ao mar) */
@@ -227,6 +230,9 @@
    seu, via o atributo data-symbol no próprio ícone. */
 .theme-symbol-accent {
   display: none;
+}
+[data-theme="premium_1"] .theme-symbol-accent[data-symbol="flower"] {
+  display: block;
 }
 [data-theme="premium_2"] .theme-symbol-accent[data-symbol="anchor"] {
   display: block;

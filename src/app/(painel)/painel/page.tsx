@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Flame, BookOpen, CalendarDays, HeartHandshake, Sparkles, Anchor, Star, Mountain } from "lucide-react";
+import { Flame, BookOpen, CalendarDays, HeartHandshake, Sparkles, Anchor, Star, Mountain, Flower2 } from "lucide-react";
 import {
   getCurrentUser,
   getTodayDevotional,
@@ -82,27 +82,34 @@ export default async function PainelPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-3">
       <div className="theme-hero-banner relative -mx-4 overflow-hidden rounded-2xl px-4 pb-3 pt-4 md:-mx-8 md:px-8">
+        <Flower2
+          aria-hidden
+          data-symbol="flower"
+          size={52}
+          strokeWidth={1.25}
+          className="theme-symbol-accent absolute right-3 top-3 text-accent/30"
+        />
         <Anchor
           aria-hidden
           data-symbol="anchor"
-          size={72}
+          size={52}
           strokeWidth={1.25}
-          className="theme-symbol-accent absolute -right-2 -top-3 text-accent/25"
+          className="theme-symbol-accent absolute right-3 top-3 text-accent/25"
         />
         <Star
           aria-hidden
           data-symbol="star"
-          size={64}
+          size={48}
           strokeWidth={1.25}
           fill="currentColor"
-          className="theme-symbol-accent absolute -right-2 -top-3 text-primary/20"
+          className="theme-symbol-accent absolute right-3 top-3 text-primary/20"
         />
         <Mountain
           aria-hidden
           data-symbol="mountain"
-          size={68}
+          size={52}
           strokeWidth={1.25}
-          className="theme-symbol-accent absolute -right-2 -top-1 text-primary/20"
+          className="theme-symbol-accent absolute right-3 top-3 text-primary/20"
         />
         <h1 className="font-serif text-xl font-semibold text-foreground">
           Bom dia{firstName ? `, ${firstName}` : ""}! 💗
