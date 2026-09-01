@@ -57,7 +57,7 @@ export function LoginForm() {
       </div>
       {state?.error && (
         <div role="alert">
-          <p className="text-sm text-red-600">{state.error}</p>
+          <p className="text-sm text-error">{state.error}</p>
           {state.unconfirmedEmail && !resendState?.message && (
             <button
               type="button"

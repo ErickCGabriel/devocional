@@ -32,14 +32,14 @@ export function DeleteAccountSection() {
   }
 
   return (
-    <div className="space-y-3 rounded-lg border border-red-200 bg-red-50 p-4">
-      <p className="text-sm text-red-800">
+    <div className="space-y-3 rounded-lg border border-error/30 bg-error-soft p-4">
+      <p className="text-sm text-error">
         Isso apaga permanentemente sua conta e todos os seus dados —
         devocionais, respostas, orações, notas, favoritos e progresso nos
         planos. Não é possível desfazer.
       </p>
       <div className="space-y-1.5">
-        <Label htmlFor="confirmDelete" className="text-red-800">
+        <Label htmlFor="confirmDelete" className="text-error">
           Digite <strong>{CONFIRM_WORD}</strong> para confirmar
         </Label>
         <Input
@@ -49,7 +49,7 @@ export function DeleteAccountSection() {
           placeholder={CONFIRM_WORD}
         />
       </div>
-      {error && <p className="text-sm text-red-700">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
       <div className="flex gap-2">
         <Button
           variant="outline"
@@ -64,7 +64,7 @@ export function DeleteAccountSection() {
         <Button
           onClick={handleDelete}
           disabled={confirmText !== CONFIRM_WORD || isPending}
-          className="bg-red-600 text-white hover:bg-red-700"
+          className="bg-error text-error-foreground hover:opacity-90"
         >
           {isPending ? "Excluindo..." : "Excluir permanentemente"}
         </Button>

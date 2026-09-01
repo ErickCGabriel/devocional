@@ -29,7 +29,7 @@ export function FavoriteForm({ disabled }: { disabled: boolean }) {
       <Input name="verseReference" required placeholder="Referência (ex: João 3:16)" />
       <Textarea name="verseText" rows={2} placeholder="Texto do versículo (opcional)" />
       <Input name="note" placeholder="Sua nota (opcional)" />
-      {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
+      {state?.error && <p className="text-sm text-error">{state.error}</p>}
       <Button type="submit" disabled={pending}>
         {pending ? "Salvando..." : "Favoritar"}
       </Button>

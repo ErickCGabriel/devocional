@@ -156,7 +156,7 @@ export function DevotionalForm({
         {status === "saving" && "Salvando..."}
         {status === "saved" && "Alterações salvas automaticamente"}
         {status === "error" && (
-          <span className="text-red-600">Erro ao salvar. Tente novamente.</span>
+          <span className="text-error">Erro ao salvar. Tente novamente.</span>
         )}
         {status === "idle" && (
           <Link href="/oracao" className="text-primary hover:underline">

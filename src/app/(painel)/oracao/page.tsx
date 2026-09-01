@@ -110,7 +110,7 @@ function PrayerCard({
         <form action={deletePrayerRequestAction.bind(null, request.id)}>
           <button
             type="submit"
-            className="rounded-md p-1.5 text-muted hover:bg-red-50 hover:text-red-600"
+            className="rounded-md p-1.5 text-muted hover:bg-error-soft hover:text-error"
             title="Excluir"
           >
             <Trash2 size={16} />

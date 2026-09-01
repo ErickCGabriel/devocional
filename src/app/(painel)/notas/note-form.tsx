@@ -34,7 +34,7 @@ export function NoteForm({ disabled }: { disabled: boolean }) {
         </label>
         <Input id="dueDate" name="dueDate" type="date" className="w-fit" />
       </div>
-      {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
+      {state?.error && <p className="text-sm text-error">{state.error}</p>}
       <Button type="submit" disabled={pending}>
         {pending ? "Salvando..." : "Salvar nota"}
       </Button>

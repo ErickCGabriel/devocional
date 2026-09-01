@@ -40,7 +40,7 @@ export function CheckoutButton({
       <Button onClick={handleClick} disabled={loading} className="w-full">
         {loading ? "Redirecionando..." : children}
       </Button>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-error">{error}</p>}
     </div>
   );
 }
@@ -72,7 +72,7 @@ export function ManageBillingButton() {
       <Button onClick={handleClick} disabled={loading} variant="outline">
         {loading ? "Redirecionando..." : "Gerenciar assinatura"}
       </Button>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-error">{error}</p>}
     </div>
   );
 }

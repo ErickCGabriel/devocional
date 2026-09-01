@@ -86,7 +86,7 @@ export function CommitmentsManager({ commitments }: { commitments: CommitmentRow
           ))}
         </div>
         <Input name="timeOfDay" type="time" className="w-fit" />
-        {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
+        {state?.error && <p className="text-sm text-error">{state.error}</p>}
         <Button type="submit" size="sm" disabled={pending}>
           {pending ? "Salvando..." : "Adicionar compromisso"}
         </Button>

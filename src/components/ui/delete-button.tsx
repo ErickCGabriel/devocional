@@ -12,7 +12,7 @@ export function DeleteButton({ action }: { action: () => void | Promise<void> })
     >
       <button
         type="submit"
-        className="shrink-0 rounded-md p-1.5 text-muted hover:bg-red-50 hover:text-red-600"
+        className="shrink-0 rounded-md p-1.5 text-muted hover:bg-error-soft hover:text-error"
         title="Excluir"
       >
         <Trash2 size={16} />

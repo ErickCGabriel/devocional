@@ -9,8 +9,8 @@ const variantClasses: Record<Variant, string> = {
     "bg-primary text-primary-foreground hover:opacity-90 shadow-soft hover:shadow-soft-lg",
   secondary:
     "bg-accent/15 text-primary hover:bg-accent/25",
-  ghost: "hover:bg-black/5 text-foreground",
-  outline: "border border-border text-foreground hover:bg-black/5",
+  ghost: "hover:bg-foreground/5 text-foreground",
+  outline: "border border-border text-foreground hover:bg-foreground/5",
 };
 
 const sizeClasses: Record<Size, string> = {
