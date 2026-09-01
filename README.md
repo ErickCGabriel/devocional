@@ -176,8 +176,17 @@ para a Bíblia (ver seção "Bíblia" abaixo).
 ### 4. Google AdSense (opcional em dev)
 
 Preencha `NEXT_PUBLIC_ADSENSE_CLIENT_ID` com o `ca-pub-...` da sua conta
-AdSense. Sem essa variável, o componente de anúncios simplesmente não
-renderiza nada (útil para desenvolver sem anúncios).
+AdSense (ex.: `ca-pub-4825669797968028`). Sem essa variável, nada de
+AdSense é carregado — nem o script global, nem os blocos de anúncio
+(útil para desenvolver sem anúncios).
+
+Quando a variável está definida, o script de verificação/carregamento do
+AdSense (`pagead2.googlesyndication.com/.../adsbygoogle.js`) é injetado
+automaticamente no `<head>` de **todas** as páginas pelo layout raiz
+(`src/app/layout.tsx`) — inclusive a landing page pública `/`, que é a
+que o Google visita para revisar o site. Não precisa colar o snippet
+manualmente em nenhuma página. Os blocos de anúncio em si
+(`<AdSlot slot="..." />`) só aparecem para usuários do plano gratuito.
 
 ### 5. Rodar localmente
 

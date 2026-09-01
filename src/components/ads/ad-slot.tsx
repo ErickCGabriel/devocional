@@ -14,12 +14,6 @@ export async function AdSlot({ slot }: { slot: string }) {
 
   return (
     <div className="my-4 overflow-hidden rounded-xl border border-dashed border-border bg-surface/50 p-2 text-center">
-      <Script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}`}
-        crossOrigin="anonymous"
-        strategy="afterInteractive"
-      />
       <ins
         className="adsbygoogle block"
         style={{ display: "block" }}

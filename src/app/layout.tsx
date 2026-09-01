@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Lora, Caveat } from "next/font/google";
 import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
@@ -49,12 +50,22 @@ export default async function RootLayout({
     // ambiente sem Supabase configurado ainda (ex.: primeiro build) — usa tema padrão
   }
 
+  const adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+
   return (
     <html
       lang="pt-BR"
       data-theme={theme}
       className={`${inter.variable} ${lora.variable} ${caveat.variable} h-full antialiased`}
     >
+      {adsenseClientId && (
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+          crossOrigin="anonymous"
+          strategy="beforeInteractive"
+        />
+      )}
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );
