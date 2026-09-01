@@ -27,7 +27,7 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <div className="border-b border-border bg-surface md:hidden">
+    <div className="sticky top-0 z-30 border-b border-border bg-surface md:hidden">
       <div className="flex items-center justify-between px-4 py-3">
         <Link href="/painel" className="font-serif text-lg font-semibold text-primary">
           ✝ Meu Devocional
