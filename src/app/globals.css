@@ -48,10 +48,8 @@
 }
 
 [data-theme="premium_1"] .theme-hero-banner {
-  background-image: linear-gradient(to bottom, rgba(255, 250, 244, 0) 55%, var(--surface) 100%),
-    url("/illustrations/hero-banner.svg");
-  background-size: cover;
-  background-position: center;
+  background-image: radial-gradient(120% 180% at 15% 0%, var(--gold-soft) 0%, transparent 60%),
+    linear-gradient(135deg, var(--accent-soft) 0%, var(--surface) 70%);
 }
 
 [data-theme="premium_1"] .theme-journal-card {
