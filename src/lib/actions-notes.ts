@@ -11,6 +11,7 @@ export async function addNoteAction(
 ): Promise<{ error?: string }> {
   const title = String(formData.get("title") ?? "").trim();
   const content = String(formData.get("content") ?? "").trim();
+  const dueDate = String(formData.get("dueDate") ?? "").trim();
   if (!content) return { error: "Escreva algo para salvar a nota." };
 
   const supabase = await createClient();
@@ -36,6 +37,7 @@ export async function addNoteAction(
     user_id: user.id,
     title: title || null,
     content,
+    due_date: dueDate || null,
   });
 
   if (error) return { error: error.message };

@@ -308,6 +308,45 @@ export async function getNotes(userId: string) {
   return data ?? [];
 }
 
+export async function getCommitments(userId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("user_commitments")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("active", true)
+    .order("created_at", { ascending: true });
+  return data ?? [];
+}
+
+/** Mapa data (YYYY-MM-DD) → notas com lembrete naquele dia, para o mês inteiro. */
+export async function getMonthNoteDates(
+  userId: string,
+  year: number,
+  month: number, // 1-12
+): Promise<Map<string, { id: string; title: string | null; content: string }[]>> {
+  const supabase = await createClient();
+  const start = `${year}-${String(month).padStart(2, "0")}-01`;
+  const endDate = new Date(year, month, 0).getDate();
+  const end = `${year}-${String(month).padStart(2, "0")}-${String(endDate).padStart(2, "0")}`;
+
+  const { data } = await supabase
+    .from("notes")
+    .select("id, title, content, due_date")
+    .eq("user_id", userId)
+    .gte("due_date", start)
+    .lte("due_date", end);
+
+  const map = new Map<string, { id: string; title: string | null; content: string }[]>();
+  for (const note of data ?? []) {
+    if (!note.due_date) continue;
+    const list = map.get(note.due_date) ?? [];
+    list.push({ id: note.id, title: note.title, content: note.content });
+    map.set(note.due_date, list);
+  }
+  return map;
+}
+
 export async function getBibleBooks() {
   const supabase = await createClient();
   const { data } = await supabase

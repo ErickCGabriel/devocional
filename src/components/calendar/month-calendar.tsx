@@ -9,18 +9,27 @@ const MONTH_NAMES = [
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
+export interface CalendarCommitment {
+  title: string;
+  weekdays: number[];
+}
+
 export function MonthCalendar({
   year,
   month, // 1-12
   dayStatus,
   todayISO,
   basePath = "/calendario",
+  commitments = [],
+  noteDates = new Map(),
 }: {
   year: number;
   month: number;
   dayStatus: Map<string, DayStatus>;
   todayISO: string;
   basePath?: string;
+  commitments?: CalendarCommitment[];
+  noteDates?: Map<string, { id: string; title: string | null; content: string }[]>;
 }) {
   const firstDay = new Date(year, month - 1, 1);
   const startWeekday = firstDay.getDay();
@@ -71,19 +80,36 @@ export function MonthCalendar({
           const isToday = iso === todayISO;
           const isFuture = iso > todayISO;
           const status = dayStatus.get(iso);
+          const weekday = new Date(year, month - 1, day).getDay();
+          const dayCommitments = commitments.filter((c) => c.weekdays.includes(weekday));
+          const dayNotes = noteDates.get(iso) ?? [];
+          const markerTitle = [
+            ...dayCommitments.map((c) => c.title),
+            ...dayNotes.map((n) => n.title || n.content),
+          ].join(" · ");
 
           const dayCell = (
-            <span
-              className={cn(
-                "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm",
-                isToday && "bg-primary font-semibold text-primary-foreground",
-                !isToday && status === "completo" && "bg-success/20 font-medium text-success",
-                !isToday && status === "parcial" && "bg-warning/20 font-medium text-warning",
-                !isToday && !status && "text-foreground/70",
-              )}
-            >
-              {day}
-            </span>
+            <div className="flex flex-col items-center gap-0.5" title={markerTitle || undefined}>
+              <span
+                className={cn(
+                  "flex h-8 w-8 items-center justify-center rounded-full text-sm",
+                  isToday && "bg-primary font-semibold text-primary-foreground",
+                  !isToday && status === "completo" && "bg-success/20 font-medium text-success",
+                  !isToday && status === "parcial" && "bg-warning/20 font-medium text-warning",
+                  !isToday && !status && "text-foreground/70",
+                )}
+              >
+                {day}
+              </span>
+              <span className="flex h-1.5 items-center gap-0.5">
+                {dayCommitments.length > 0 && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                )}
+                {dayNotes.length > 0 && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+                )}
+              </span>
+            </div>
           );
 
           if (isFuture) {

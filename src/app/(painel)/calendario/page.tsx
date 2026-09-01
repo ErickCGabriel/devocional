@@ -1,6 +1,13 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser, getMonthDayStatus, getStreak } from "@/lib/queries";
+import {
+  getCurrentUser,
+  getMonthDayStatus,
+  getStreak,
+  getCommitments,
+  getMonthNoteDates,
+} from "@/lib/queries";
 import { MonthCalendar } from "@/components/calendar/month-calendar";
+import { CommitmentsManager } from "./commitments-manager";
 import { Card } from "@/components/ui/card";
 import { todayISO } from "@/lib/utils";
 import { Flame } from "lucide-react";
@@ -18,9 +25,11 @@ export default async function CalendarioPage({
   const year = Number(params.year) || now.getFullYear();
   const month = Number(params.month) || now.getMonth() + 1;
 
-  const [dayStatus, streak] = await Promise.all([
+  const [dayStatus, streak, commitments, noteDates] = await Promise.all([
     getMonthDayStatus(user.id, year, month),
     getStreak(user.id),
+    getCommitments(user.id),
+    getMonthNoteDates(user.id, year, month),
   ]);
 
   return (
@@ -56,6 +65,8 @@ export default async function CalendarioPage({
           month={month}
           dayStatus={dayStatus}
           todayISO={todayISO()}
+          commitments={commitments}
+          noteDates={noteDates}
         />
         <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-muted">
           <span className="flex items-center gap-1.5">
@@ -67,7 +78,24 @@ export default async function CalendarioPage({
           <span className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-primary" /> Hoje
           </span>
+          <span className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Compromisso
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-warning" /> Nota com data
+          </span>
         </div>
+      </Card>
+
+      <Card>
+        <h2 className="mb-3 text-sm font-semibold text-foreground">
+          Compromissos recorrentes
+        </h2>
+        <p className="mb-4 text-xs text-muted">
+          Cadastre missas, cultos ou encontros que se repetem toda semana —
+          eles aparecem marcados no calendário acima.
+        </p>
+        <CommitmentsManager commitments={commitments} />
       </Card>
     </div>
   );

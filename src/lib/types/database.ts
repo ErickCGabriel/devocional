@@ -258,6 +258,7 @@ export interface Database {
           title: string | null;
           content: string;
           devotional_id: string | null;
+          due_date: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -266,6 +267,25 @@ export interface Database {
           content: string;
         };
         Update: Partial<Database["public"]["Tables"]["notes"]["Row"]>;
+        Relationships: [];
+      };
+      user_commitments: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          weekdays: number[];
+          time_of_day: string | null;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["user_commitments"]["Row"]> & {
+          user_id: string;
+          title: string;
+          weekdays: number[];
+        };
+        Update: Partial<Database["public"]["Tables"]["user_commitments"]["Row"]>;
         Relationships: [];
       };
       subscriptions: {

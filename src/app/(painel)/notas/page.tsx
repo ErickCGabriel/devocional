@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
+import { CalendarClock } from "lucide-react";
 import { getCurrentUser, getNotes } from "@/lib/queries";
 import { getSubscription } from "@/lib/subscription";
 import { FREE_NOTES_LIMIT } from "@/lib/limits";
-import { Card } from "@/components/ui/card";
+import { Card, Badge } from "@/components/ui/card";
 import { NoteForm } from "./note-form";
 import { DeleteButton } from "@/components/ui/delete-button";
 import { deleteNoteAction } from "@/lib/actions-notes";
@@ -38,9 +39,17 @@ export default async function NotasPage() {
           <Card key={note.id}>
             <div className="flex items-start justify-between gap-3">
               <div>
-                {note.title && (
-                  <h3 className="font-medium text-foreground">{note.title}</h3>
-                )}
+                <div className="flex flex-wrap items-center gap-2">
+                  {note.title && (
+                    <h3 className="font-medium text-foreground">{note.title}</h3>
+                  )}
+                  {note.due_date && (
+                    <Badge className="flex items-center gap-1 bg-warning/15 text-warning">
+                      <CalendarClock size={11} />
+                      {new Date(note.due_date + "T00:00:00").toLocaleDateString("pt-BR")}
+                    </Badge>
+                  )}
+                </div>
                 <p className="mt-1 whitespace-pre-wrap text-sm text-foreground/80">
                   {note.content}
                 </p>

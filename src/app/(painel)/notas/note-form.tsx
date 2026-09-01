@@ -28,6 +28,12 @@ export function NoteForm({ disabled }: { disabled: boolean }) {
     <form ref={formRef} action={formAction} className="space-y-3">
       <Input name="title" placeholder="Título (opcional)" />
       <Textarea name="content" rows={3} required placeholder="Escreva sua anotação..." />
+      <div className="space-y-1.5">
+        <label htmlFor="dueDate" className="text-xs text-muted">
+          Atrelar a uma data (opcional) — vira lembrete e aparece no calendário
+        </label>
+        <Input id="dueDate" name="dueDate" type="date" className="w-fit" />
+      </div>
       {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
       <Button type="submit" disabled={pending}>
         {pending ? "Salvando..." : "Salvar nota"}
