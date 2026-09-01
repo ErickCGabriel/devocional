@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Inter, Lora, Caveat } from "next/font/google";
 import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
@@ -59,12 +58,13 @@ export default async function RootLayout({
       className={`${inter.variable} ${lora.variable} ${caveat.variable} h-full antialiased`}
     >
       {adsenseClientId && (
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
-          crossOrigin="anonymous"
-          strategy="beforeInteractive"
-        />
+        <head>
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+            crossOrigin="anonymous"
+          />
+        </head>
       )}
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
