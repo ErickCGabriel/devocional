@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Flame, BookOpen, CalendarDays, HeartHandshake, Sparkles, Anchor, Star } from "lucide-react";
+import { Flame, BookOpen, CalendarDays, HeartHandshake, Sparkles, Anchor, Star, Mountain } from "lucide-react";
 import {
   getCurrentUser,
   getTodayDevotional,
@@ -97,6 +97,13 @@ export default async function PainelPage() {
           fill="currentColor"
           className="theme-symbol-accent absolute -right-2 -top-3 text-primary/20"
         />
+        <Mountain
+          aria-hidden
+          data-symbol="mountain"
+          size={68}
+          strokeWidth={1.25}
+          className="theme-symbol-accent absolute -right-2 -top-1 text-primary/20"
+        />
         <h1 className="font-serif text-xl font-semibold text-foreground">
           Bom dia{firstName ? `, ${firstName}` : ""}! 💗
         </h1>
@@ -106,6 +113,11 @@ export default async function PainelPage() {
           </p>
         )}
       </div>
+
+      <div
+        aria-hidden
+        className="theme-photo-banner -mx-4 h-40 rounded-2xl sm:h-52 md:-mx-8 md:h-64"
+      />
 
       <div className="grid gap-3 md:grid-cols-2">
         <Card className="flex flex-col justify-between p-4">

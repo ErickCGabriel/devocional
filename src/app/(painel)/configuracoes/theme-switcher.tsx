@@ -16,8 +16,9 @@ const PREMIUM_THEMES: { value: Theme; label: string; swatch: string }[] = [
   { value: "premium_1", label: "Diário Floral", swatch: "#b5406f" },
   { value: "premium_2", label: "Maré", swatch: "#0f7ba0" },
   { value: "premium_3", label: "Noite Estrelada", swatch: "#d97706" },
+  { value: "premium_4", label: "Monte", swatch: "#4a7c59" },
 ];
-const LOCKED_PREMIUM_SLOTS = 1;
+const LOCKED_PREMIUM_SLOTS = 0;
 
 export function ThemeSwitcher({
   current,

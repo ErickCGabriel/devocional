@@ -93,12 +93,58 @@
   --error-soft: rgba(248, 113, 113, 0.15);
 }
 
+/* Monte — 4º tema exclusivo do plano premium (verde de montanha + dourado do
+   amanhecer, referência ao Salmo 121:1 "Levanto os meus olhos para os montes") */
+[data-theme="premium_4"] {
+  --background: #f6f4ec;
+  --foreground: #2f3b2a;
+  --surface: #ffffff;
+  --border: #e2ddc4;
+  --primary: #4a7c59;
+  --primary-foreground: #f5f9ef;
+  --accent: #d9823b;
+  --accent-soft: #fbe8d4;
+  --muted: #6b7566;
+  --success: #4a7c59;
+  --warning: #d99a4e;
+  --error: #dc2626;
+  --error-foreground: #ffffff;
+  --error-soft: #fef2f2;
+}
+
 /* Faixa/degradê decorativo no topo de heros premium — só cor, sem imagem
    esticada (aprendizado do tema Diário Floral: ilustração cortada fica tosca
    em faixas curtas e largas). Genérico: cada tema define seu --accent-soft. */
 [data-theme^="premium_"] .theme-hero-banner {
   background-image: radial-gradient(120% 180% at 15% 0%, var(--accent-soft) 0%, transparent 60%),
     linear-gradient(135deg, var(--accent-soft) 0%, var(--surface) 70%);
+}
+
+/* Foto real do tema no topo do painel — altura fixa e proporcional (nunca
+   esticada atrás de texto: é uma faixa própria, sem texto sobreposto). */
+.theme-photo-banner {
+  display: none;
+  position: relative;
+  overflow: hidden;
+}
+[data-theme^="premium_"] .theme-photo-banner {
+  display: block;
+}
+[data-theme="premium_1"] .theme-photo-banner {
+  background-image: url("/theme-photos/floral-hero.jpg");
+}
+[data-theme="premium_2"] .theme-photo-banner {
+  background-image: url("/theme-photos/mare-hero.jpg");
+}
+[data-theme="premium_3"] .theme-photo-banner {
+  background-image: url("/theme-photos/noite-hero.jpg");
+}
+[data-theme="premium_4"] .theme-photo-banner {
+  background-image: url("/theme-photos/monte-hero.jpg");
+}
+.theme-photo-banner {
+  background-size: cover;
+  background-position: center;
 }
 
 [data-theme="premium_1"] .theme-journal-card {
@@ -158,6 +204,24 @@
   opacity: 0.8;
 }
 
+[data-theme="premium_4"] .theme-journal-card {
+  position: relative;
+  padding-top: 1.75rem;
+}
+
+[data-theme="premium_4"] .theme-journal-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 12px;
+  background-image: url("/illustrations/mountain-pattern.svg");
+  background-repeat: repeat-x;
+  background-size: 90px 12px;
+  opacity: 0.8;
+}
+
 /* Ícone-símbolo no canto do hero, um por tema premium — elemento de
    tamanho fixo (nunca esticado como background). Cada tema mostra só o
    seu, via o atributo data-symbol no próprio ícone. */
@@ -170,6 +234,9 @@
 [data-theme="premium_3"] .theme-symbol-accent[data-symbol="star"] {
   display: block;
 }
+[data-theme="premium_4"] .theme-symbol-accent[data-symbol="mountain"] {
+  display: block;
+}
 
 /* Faixa decorativa no rodapé da hero da landing pública (sempre visível,
    independente do tema do usuário) — fica abaixo do texto, nunca atrás dele. */
@@ -179,8 +246,6 @@
   background-position: bottom;
   background-repeat: no-repeat;
 }
-
-/* 1 tema premium restante — paleta a definir. */
 
 @theme inline {
   --color-background: var(--background);

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Anchor, Star } from "lucide-react";
+import { Anchor, Star, Mountain } from "lucide-react";
 import {
   getCurrentUser,
   getTodayDevotional,
@@ -60,6 +60,11 @@ export default async function DevocionalPage() {
         </p>
       </div>
 
+      <div
+        aria-hidden
+        className="theme-photo-banner h-40 rounded-2xl sm:h-52 md:h-60"
+      />
+
       <div className="theme-hero-banner relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-accent-soft to-surface px-6 py-10 text-center">
         <Anchor
           aria-hidden
@@ -74,6 +79,13 @@ export default async function DevocionalPage() {
           size={130}
           strokeWidth={1}
           fill="currentColor"
+          className="theme-symbol-accent absolute -bottom-6 left-1/2 -translate-x-1/2 text-primary/10"
+        />
+        <Mountain
+          aria-hidden
+          data-symbol="mountain"
+          size={130}
+          strokeWidth={1}
           className="theme-symbol-accent absolute -bottom-6 left-1/2 -translate-x-1/2 text-primary/10"
         />
         <FavoriteHeartButton
