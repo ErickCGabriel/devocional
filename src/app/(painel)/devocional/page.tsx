@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Anchor } from "lucide-react";
 import {
   getCurrentUser,
   getTodayDevotional,
@@ -60,6 +61,12 @@ export default async function DevocionalPage() {
       </div>
 
       <div className="theme-hero-banner relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-accent-soft to-surface px-6 py-10 text-center">
+        <Anchor
+          aria-hidden
+          size={140}
+          strokeWidth={1}
+          className="theme-symbol-accent absolute -bottom-6 left-1/2 -translate-x-1/2 text-accent/15"
+        />
         <FavoriteHeartButton
           reference={devotional.verse_reference}
           text={devotional.verse_text}

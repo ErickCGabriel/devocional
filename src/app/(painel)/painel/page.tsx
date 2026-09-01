@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Flame, BookOpen, CalendarDays, HeartHandshake, Sparkles } from "lucide-react";
+import { Flame, BookOpen, CalendarDays, HeartHandshake, Sparkles, Anchor } from "lucide-react";
 import {
   getCurrentUser,
   getTodayDevotional,
@@ -81,7 +81,13 @@ export default async function PainelPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-3">
-      <div className="theme-hero-banner -mx-4 rounded-2xl px-4 pb-3 pt-4 md:-mx-8 md:px-8">
+      <div className="theme-hero-banner relative -mx-4 overflow-hidden rounded-2xl px-4 pb-3 pt-4 md:-mx-8 md:px-8">
+        <Anchor
+          aria-hidden
+          size={72}
+          strokeWidth={1.25}
+          className="theme-symbol-accent absolute -right-2 -top-3 text-accent/25"
+        />
         <h1 className="font-serif text-xl font-semibold text-foreground">
           Bom dia{firstName ? `, ${firstName}` : ""}! 💗
         </h1>

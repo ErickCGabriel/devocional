@@ -14,8 +14,9 @@ const FREE_THEMES: { value: Theme; label: string; swatch: string }[] = [
 
 const PREMIUM_THEMES: { value: Theme; label: string; swatch: string }[] = [
   { value: "premium_1", label: "Diário Floral", swatch: "#b5406f" },
+  { value: "premium_2", label: "Maré", swatch: "#0f7ba0" },
 ];
-const LOCKED_PREMIUM_SLOTS = 3;
+const LOCKED_PREMIUM_SLOTS = 2;
 
 export function ThemeSwitcher({
   current,

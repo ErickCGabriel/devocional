@@ -47,8 +47,26 @@
   --warning: #d99a4e;
 }
 
-[data-theme="premium_1"] .theme-hero-banner {
-  background-image: radial-gradient(120% 180% at 15% 0%, var(--gold-soft) 0%, transparent 60%),
+/* Maré — 2º tema exclusivo do plano premium (azul claro, referências ao mar) */
+[data-theme="premium_2"] {
+  --background: #eff8fc;
+  --foreground: #123a4d;
+  --surface: #ffffff;
+  --border: #cdecf7;
+  --primary: #0f7ba0;
+  --primary-foreground: #f2fbff;
+  --accent: #5fc4e8;
+  --accent-soft: #e0f4fb;
+  --muted: #5b7f8c;
+  --success: #3f8f6a;
+  --warning: #d99a4e;
+}
+
+/* Faixa/degradê decorativo no topo de heros premium — só cor, sem imagem
+   esticada (aprendizado do tema Diário Floral: ilustração cortada fica tosca
+   em faixas curtas e largas). Genérico: cada tema define seu --accent-soft. */
+[data-theme^="premium_"] .theme-hero-banner {
+  background-image: radial-gradient(120% 180% at 15% 0%, var(--accent-soft) 0%, transparent 60%),
     linear-gradient(135deg, var(--accent-soft) 0%, var(--surface) 70%);
 }
 
@@ -73,6 +91,33 @@
   );
 }
 
+[data-theme="premium_2"] .theme-journal-card {
+  position: relative;
+  padding-top: 1.75rem;
+}
+
+[data-theme="premium_2"] .theme-journal-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 10px;
+  background-image: url("/illustrations/wave-pattern.svg");
+  background-repeat: repeat-x;
+  background-size: 90px 10px;
+  opacity: 0.7;
+}
+
+/* Ícone-símbolo (âncora) no canto do hero, só no tema Maré — elemento de
+   tamanho fixo, nunca esticado como background. */
+.theme-symbol-accent {
+  display: none;
+}
+[data-theme="premium_2"] .theme-symbol-accent {
+  display: block;
+}
+
 /* Faixa decorativa no rodapé da hero da landing pública (sempre visível,
    independente do tema do usuário) — fica abaixo do texto, nunca atrás dele. */
 .landing-hero-band {
@@ -82,7 +127,7 @@
   background-repeat: no-repeat;
 }
 
-/* 3 temas premium restantes — paletas a definir. */
+/* 2 temas premium restantes — paletas a definir. */
 
 @theme inline {
   --color-background: var(--background);
