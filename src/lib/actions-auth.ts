@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { GENERO_OPTIONS, RELIGIAO_OPTIONS, OBJETIVO_OPTIONS } from "@/lib/profile-options";
 
 export interface AuthActionState {
   error?: string;
@@ -44,19 +45,38 @@ export async function signUpAction(
   const fullName = String(formData.get("fullName") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  const idade = String(formData.get("idade") ?? "").trim();
+  const genero = String(formData.get("genero") ?? "");
+  const religiao = String(formData.get("religiao") ?? "");
+  const objetivo = String(formData.get("objetivo") ?? "");
 
-  if (!fullName || !email || !password) {
+  if (!fullName || !email || !password || !idade || !genero || !religiao || !objetivo) {
     return { error: "Preencha todos os campos." };
   }
   if (password.length < 6) {
     return { error: "A senha precisa ter pelo menos 6 caracteres." };
+  }
+  const idadeNum = Number(idade);
+  if (!Number.isInteger(idadeNum) || idadeNum < 1 || idadeNum > 120) {
+    return { error: "Informe uma idade válida." };
+  }
+  if (!GENERO_OPTIONS.some((o) => o.value === genero)) {
+    return { error: "Selecione um gênero válido." };
+  }
+  if (!RELIGIAO_OPTIONS.some((o) => o.value === religiao)) {
+    return { error: "Selecione uma religião válida." };
+  }
+  if (!OBJETIVO_OPTIONS.some((o) => o.value === objetivo)) {
+    return { error: "Selecione um objetivo válido." };
   }
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { full_name: fullName } },
+    options: {
+      data: { full_name: fullName, idade: idadeNum, genero, religiao, objetivo },
+    },
   });
 
   if (error) {

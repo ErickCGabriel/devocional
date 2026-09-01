@@ -12,6 +12,20 @@ export type Theme =
   | "premium_2"
   | "premium_3"
   | "premium_4";
+export type Genero = "feminino" | "masculino" | "prefiro_nao_dizer";
+export type Religiao =
+  | "catolico"
+  | "evangelico"
+  | "espirita"
+  | "outra_crista"
+  | "outra_religiao"
+  | "sem_religiao"
+  | "prefiro_nao_dizer";
+export type Objetivo =
+  | "habito_diario"
+  | "crescer_na_fe"
+  | "estudar_biblia"
+  | "momento_dificil";
 
 export interface Database {
   public: {
@@ -22,6 +36,10 @@ export interface Database {
           full_name: string | null;
           avatar_url: string | null;
           theme: Theme;
+          idade: number | null;
+          genero: Genero | null;
+          religiao: Religiao | null;
+          objetivo: Objetivo | null;
           created_at: string;
           updated_at: string;
         };

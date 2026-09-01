@@ -4,7 +4,8 @@ import { useActionState } from "react";
 import { Mail } from "lucide-react";
 import { signUpAction, type AuthActionState } from "@/lib/actions-auth";
 import { Button } from "@/components/ui/button";
-import { Input, Label } from "@/components/ui/input";
+import { Input, Label, Select } from "@/components/ui/input";
+import { GENERO_OPTIONS, RELIGIAO_OPTIONS, OBJETIVO_OPTIONS } from "@/lib/profile-options";
 
 const initialState: AuthActionState = {};
 
@@ -58,6 +59,59 @@ export function SignUpForm() {
           minLength={6}
           placeholder="Mínimo 6 caracteres"
         />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="idade">Idade</Label>
+          <Input
+            id="idade"
+            name="idade"
+            type="number"
+            min={1}
+            max={120}
+            required
+            placeholder="Ex: 28"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="genero">Gênero</Label>
+          <Select id="genero" name="genero" required defaultValue="">
+            <option value="" disabled>
+              Selecione
+            </option>
+            {GENERO_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="religiao">Religião</Label>
+        <Select id="religiao" name="religiao" required defaultValue="">
+          <option value="" disabled>
+            Selecione
+          </option>
+          {RELIGIAO_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </Select>
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="objetivo">O que você busca no Meu Devocional?</Label>
+        <Select id="objetivo" name="objetivo" required defaultValue="">
+          <option value="" disabled>
+            Selecione
+          </option>
+          {OBJETIVO_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </Select>
       </div>
       {state?.error && (
         <p className="text-sm text-red-600" role="alert">
