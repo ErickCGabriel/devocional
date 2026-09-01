@@ -13,6 +13,8 @@
   --muted: #8f7b7e;
   --success: #6a9b6e;
   --warning: #d99a4e;
+  --gold: #e0a45c;
+  --gold-soft: #fbe9d3;
 }
 
 /* Masculino — segundo tema gratuito (preto, branco e cinza) */
@@ -73,6 +75,15 @@
   );
 }
 
+/* Faixa decorativa no rodapé da hero da landing pública (sempre visível,
+   independente do tema do usuário) — fica abaixo do texto, nunca atrás dele. */
+.landing-hero-band {
+  background-image: url("/illustrations/hero-band.svg");
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: no-repeat;
+}
+
 /* 3 temas premium restantes — paletas a definir. */
 
 @theme inline {
@@ -87,6 +98,8 @@
   --color-muted: var(--muted);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-script: var(--font-script);
