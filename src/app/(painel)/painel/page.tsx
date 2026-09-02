@@ -16,7 +16,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MonthCalendar } from "@/components/calendar/month-calendar";
-import { todayISO } from "@/lib/utils";
+import { todayISO, nowInBrazil } from "@/lib/utils";
 
 const WEEKDAY_LABELS = ["D", "S", "T", "Q", "Q", "S", "S"];
 
@@ -25,7 +25,7 @@ export default async function PainelPage() {
   if (!user) redirect("/login");
 
   const supabase = await createClient();
-  const now = new Date();
+  const now = nowInBrazil();
 
   const [
     { data: profile },
@@ -41,7 +41,7 @@ export default async function PainelPage() {
     getTodayDevotional(),
     getStreak(user.id),
     getWeeklyVerse(),
-    getMonthDayStatus(user.id, now.getFullYear(), now.getMonth() + 1),
+    getMonthDayStatus(user.id, now.getUTCFullYear(), now.getUTCMonth() + 1),
     getUserPlanProgress(user.id),
     getReadingPlans(),
     getPrayerRequests(user.id),
@@ -51,12 +51,12 @@ export default async function PainelPage() {
   const completedCount = [...dayStatus.values()].filter((s) => s === "completo").length;
 
   const dayOfYear = Math.ceil(
-    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
+    (now.getTime() - Date.UTC(now.getUTCFullYear(), 0, 0)) / 86400000,
   );
-  const daysInYear = new Date(now.getFullYear(), 11, 31).getDate() === 31 ? 365 : 365;
+  const daysInYear = 365;
   const isLeap =
-    (now.getFullYear() % 4 === 0 && now.getFullYear() % 100 !== 0) ||
-    now.getFullYear() % 400 === 0;
+    (now.getUTCFullYear() % 4 === 0 && now.getUTCFullYear() % 100 !== 0) ||
+    now.getUTCFullYear() % 400 === 0;
 
   const activePlan = planProgress.find((p) => !p.completed_at) ?? planProgress[0];
   const suggestedPlan = plans.find(
@@ -68,11 +68,11 @@ export default async function PainelPage() {
 
   const last7 = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(now);
-    d.setDate(d.getDate() - (6 - i));
+    d.setUTCDate(d.getUTCDate() - (6 - i));
     const iso = d.toISOString().slice(0, 10);
     return {
       iso,
-      weekday: WEEKDAY_LABELS[d.getDay()],
+      weekday: WEEKDAY_LABELS[d.getUTCDay()],
       done: dayStatus.get(iso) === "completo" || (iso === entry?.entry_date && entry?.completed),
     };
   });
@@ -133,7 +133,12 @@ export default async function PainelPage() {
             Devocional de hoje
           </div>
           <p className="mt-1.5 text-lg font-medium text-foreground">
-            {now.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
+            {now.toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+              timeZone: "UTC",
+            })}
           </p>
           <p className="text-xs text-muted">
             Dia {dayOfYear} de {isLeap ? 366 : daysInYear}

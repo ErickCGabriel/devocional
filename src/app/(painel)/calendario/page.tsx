@@ -9,7 +9,7 @@ import {
 import { MonthCalendar } from "@/components/calendar/month-calendar";
 import { CommitmentsManager } from "./commitments-manager";
 import { Card } from "@/components/ui/card";
-import { todayISO } from "@/lib/utils";
+import { todayISO, nowInBrazil } from "@/lib/utils";
 import { Flame } from "lucide-react";
 
 export default async function CalendarioPage({
@@ -21,9 +21,9 @@ export default async function CalendarioPage({
   if (!user) redirect("/login");
 
   const params = await searchParams;
-  const now = new Date();
-  const year = Number(params.year) || now.getFullYear();
-  const month = Number(params.month) || now.getMonth() + 1;
+  const now = nowInBrazil();
+  const year = Number(params.year) || now.getUTCFullYear();
+  const month = Number(params.month) || now.getUTCMonth() + 1;
 
   const [dayStatus, streak, commitments, noteDates] = await Promise.all([
     getMonthDayStatus(user.id, year, month),
