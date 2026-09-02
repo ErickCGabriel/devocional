@@ -3,8 +3,7 @@ import Link from "next/link";
 import { Flame, BookOpen, CalendarDays, HeartHandshake, Sparkles, Anchor, Star, Mountain, Flower2 } from "lucide-react";
 import {
   getCurrentUser,
-  getTodayDevotional,
-  getEntryForDevotional,
+  getEntryByDate,
   getStreak,
   getWeeklyVerse,
   getMonthDayStatus,
@@ -29,7 +28,6 @@ export default async function PainelPage() {
 
   const [
     { data: profile },
-    { devotional },
     streak,
     weeklyVerse,
     dayStatus,
@@ -38,7 +36,6 @@ export default async function PainelPage() {
     prayerRequests,
   ] = await Promise.all([
     supabase.from("profiles").select("full_name").eq("id", user.id).single(),
-    getTodayDevotional(),
     getStreak(user.id),
     getWeeklyVerse(),
     getMonthDayStatus(user.id, now.getUTCFullYear(), now.getUTCMonth() + 1),
@@ -47,7 +44,7 @@ export default async function PainelPage() {
     getPrayerRequests(user.id),
   ]);
 
-  const entry = devotional ? await getEntryForDevotional(devotional.id, user.id) : null;
+  const entry = await getEntryByDate(user.id, todayISO());
   const completedCount = [...dayStatus.values()].filter((s) => s === "completo").length;
 
   const dayOfYear = Math.ceil(

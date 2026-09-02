@@ -33,28 +33,23 @@ export async function getTodayDevotional() {
   return { devotional: fallback, isToday: false };
 }
 
-export async function getEntryForDevotional(devotionalId: string, userId: string) {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("user_devotional_entries")
-    .select("*")
-    .eq("devotional_id", devotionalId)
-    .eq("user_id", userId)
-    .maybeSingle();
-  return data;
-}
-
 /**
- * Retorna a entrada do dia, criando-a se ainda não existir. A criação
- * dispara o trigger que sorteia as perguntas de reflexão/aplicação/oração
- * daquele dia (ver migration 0004_question_bank.sql).
+ * Retorna a entrada do dia, criando-a se ainda não existir. A chave real de
+ * uma entrada é (usuário, entry_date) — não o devotional_id: quando ainda
+ * não existe conteúdo cadastrado pra data exata, getTodayDevotional() cai
+ * num fallback e reaproveita o devocional mais recente, e se a entrada
+ * fosse buscada por devotional_id ela ficaria "presa" a esse mesmo
+ * conteúdo em vez de zerar a cada dia novo.
+ *
+ * A criação dispara o trigger que sorteia as perguntas de
+ * reflexão/aplicação/oração daquele dia (ver migration 0004_question_bank.sql).
  */
 export async function getOrCreateEntry(
   devotionalId: string,
   userId: string,
   entryDate: string,
 ) {
-  const existing = await getEntryForDevotional(devotionalId, userId);
+  const existing = await getEntryByDate(userId, entryDate);
   if (existing) return existing;
 
   const supabase = await createClient();
@@ -66,7 +61,7 @@ export async function getOrCreateEntry(
 
   if (error) {
     // condição de corrida rara (dois inserts simultâneos) — a linha já existe
-    const retry = await getEntryForDevotional(devotionalId, userId);
+    const retry = await getEntryByDate(userId, entryDate);
     if (retry) return retry;
     throw error;
   }
