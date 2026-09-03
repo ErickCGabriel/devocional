@@ -229,7 +229,7 @@ export default function Home() {
             </Card>
           </div>
           <p className="mt-4 text-center text-xs text-muted">
-            Também disponível o plano vitalício, pagamento único.
+            Também disponível o plano anual (R$ 99/ano) e o vitalício, pagamento único.
           </p>
         </section>
 

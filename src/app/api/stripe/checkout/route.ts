@@ -13,8 +13,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
-  const { plan } = (await request.json()) as { plan: "mensal" | "vitalicio" };
-  if (plan !== "mensal" && plan !== "vitalicio") {
+  const { plan } = (await request.json()) as { plan: "mensal" | "anual" | "vitalicio" };
+  if (plan !== "mensal" && plan !== "anual" && plan !== "vitalicio") {
     return NextResponse.json({ error: "Plano inválido." }, { status: 400 });
   }
 
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      mode: plan === "mensal" ? "subscription" : "payment",
+      mode: plan === "vitalicio" ? "payment" : "subscription",
       line_items: [
         {
           price: priceId,

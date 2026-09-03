@@ -59,7 +59,7 @@ export default async function AssinaturaPage({
         </Card>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <h2 className="font-serif text-lg font-semibold">Gratuito</h2>
           <p className="mt-1 text-2xl font-semibold text-foreground">R$ 0</p>
@@ -92,6 +92,30 @@ export default async function AssinaturaPage({
               <ManageBillingButton />
             ) : (
               <CheckoutButton plan="mensal">Assinar mensal</CheckoutButton>
+            )}
+          </div>
+        </Card>
+
+        <Card className="border-gold/50 ring-1 ring-gold/30">
+          <Badge className="mb-1 bg-gold/15 text-gold">Economize 2 meses</Badge>
+          <h2 className="font-serif text-lg font-semibold">Premium anual</h2>
+          <p className="mt-1 text-2xl font-semibold text-foreground">
+            R$ 99<span className="text-sm font-normal text-muted">/ano</span>
+          </p>
+          <p className="text-xs text-muted">equivale a R$ 8,25/mês</p>
+          <ul className="mt-4 space-y-2 text-sm text-foreground/80">
+            {PREMIUM_FEATURES.map((f) => (
+              <li key={f} className="flex items-start gap-2">
+                <Check size={16} className="mt-0.5 shrink-0 text-success" />
+                {f}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-5">
+            {subscription.plan === "anual" ? (
+              <ManageBillingButton />
+            ) : (
+              <CheckoutButton plan="anual">Assinar anual</CheckoutButton>
             )}
           </div>
         </Card>

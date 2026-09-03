@@ -3,8 +3,9 @@ import type Stripe from "stripe";
 import { stripe, STRIPE_PRICE_IDS } from "@/lib/stripe";
 import { createServiceClient } from "@/lib/supabase/service";
 
-function planFromPriceId(priceId: string | undefined): "mensal" | "vitalicio" | null {
+function planFromPriceId(priceId: string | undefined): "mensal" | "anual" | "vitalicio" | null {
   if (priceId === STRIPE_PRICE_IDS.mensal) return "mensal";
+  if (priceId === STRIPE_PRICE_IDS.anual) return "anual";
   if (priceId === STRIPE_PRICE_IDS.vitalicio) return "vitalicio";
   return null;
 }

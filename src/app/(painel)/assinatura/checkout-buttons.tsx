@@ -7,7 +7,7 @@ export function CheckoutButton({
   plan,
   children,
 }: {
-  plan: "mensal" | "vitalicio";
+  plan: "mensal" | "anual" | "vitalicio";
   children: React.ReactNode;
 }) {
   const [loading, setLoading] = useState(false);
