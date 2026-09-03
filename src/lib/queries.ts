@@ -162,17 +162,16 @@ export async function getStreak(userId: string) {
 }
 
 /**
- * Sorteia um versículo entre todos os já cadastrados em bible_verses — troca
- * uma vez por semana (mesmo versículo a semana toda), sem precisar de
- * curadoria manual. A "semana" aqui é só um bloco de 7 dias corridos desde a
- * época unix (não precisa alinhar com domingo/segunda), o que já é o
- * suficiente pra dar a sensação de "verse of the week".
+ * Sorteia um versículo entre o pool curado em featured_verses (gerenciado
+ * pelo admin em /admin/versiculos) — troca uma vez por semana, mesmo
+ * versículo a semana toda. A "semana" aqui é só um bloco de 7 dias corridos
+ * desde a época unix (não precisa alinhar com domingo/segunda).
  */
 export async function getWeeklyVerse() {
   const supabase = await createClient();
 
   const { count } = await supabase
-    .from("bible_verses")
+    .from("featured_verses")
     .select("id", { count: "exact", head: true });
 
   if (!count) return null;
@@ -181,26 +180,13 @@ export async function getWeeklyVerse() {
   const offset = weekIndex % count;
 
   const { data: verse } = await supabase
-    .from("bible_verses")
-    .select("book_id, chapter, verse, text")
-    .order("id", { ascending: true })
+    .from("featured_verses")
+    .select("verse_reference, verse_text")
+    .order("created_at", { ascending: true })
     .range(offset, offset)
     .maybeSingle();
 
-  if (!verse) return null;
-
-  const { data: book } = await supabase
-    .from("bible_books")
-    .select("name")
-    .eq("id", verse.book_id)
-    .maybeSingle();
-
-  return {
-    verse_text: verse.text,
-    verse_reference: book
-      ? `${book.name} ${verse.chapter}:${verse.verse}`
-      : `${verse.chapter}:${verse.verse}`,
-  };
+  return verse;
 }
 
 export type DayStatus = "completo" | "parcial";

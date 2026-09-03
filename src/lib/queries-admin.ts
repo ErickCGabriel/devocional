@@ -181,3 +181,18 @@ export async function getAdminReadingPlanDayById(id: string) {
   const { data } = await supabase.from("reading_plan_days").select("*").eq("id", id).maybeSingle();
   return data;
 }
+
+export async function getAdminFeaturedVerses() {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("featured_verses")
+    .select("*")
+    .order("created_at", { ascending: true });
+  return data ?? [];
+}
+
+export async function getAdminFeaturedVerseById(id: string) {
+  const supabase = createServiceClient();
+  const { data } = await supabase.from("featured_verses").select("*").eq("id", id).maybeSingle();
+  return data;
+}

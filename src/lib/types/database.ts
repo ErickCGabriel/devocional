@@ -80,6 +80,17 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["weekly_verses"]["Row"]>;
         Relationships: [];
       };
+      featured_verses: {
+        Row: {
+          id: string;
+          verse_reference: string;
+          verse_text: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["featured_verses"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["featured_verses"]["Row"]>;
+        Relationships: [];
+      };
       user_devotional_entries: {
         Row: {
           id: string;

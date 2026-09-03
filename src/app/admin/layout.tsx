@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Users, BookText, ListChecks, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Users, BookText, ListChecks, Quote, ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin";
 
 const navItems = [
@@ -7,6 +7,7 @@ const navItems = [
   { href: "/admin/usuarios", label: "Usuários", icon: Users },
   { href: "/admin/conteudo", label: "Devocionais", icon: BookText },
   { href: "/admin/planos", label: "Planos de leitura", icon: ListChecks },
+  { href: "/admin/versiculos", label: "Versículo da semana", icon: Quote },
 ];
 
 export default async function AdminLayout({

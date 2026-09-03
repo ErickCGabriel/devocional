@@ -296,3 +296,65 @@ export async function deleteReadingPlanDayAction(dayId: string, planId: string) 
   await supabase.from("reading_plan_days").delete().eq("id", dayId);
   revalidatePath(`/admin/planos/${planId}`);
 }
+
+export interface FeaturedVerseFormFields {
+  verse_reference: string;
+  verse_text: string;
+}
+
+function readFeaturedVerseFields(formData: FormData): FeaturedVerseFormFields {
+  return {
+    verse_reference: String(formData.get("verse_reference") ?? "").trim(),
+    verse_text: String(formData.get("verse_text") ?? "").trim(),
+  };
+}
+
+function validateFeaturedVerseFields(fields: FeaturedVerseFormFields): string | null {
+  if (!fields.verse_reference) return "Informe a referência do versículo.";
+  if (!fields.verse_text) return "Escreva o texto do versículo.";
+  return null;
+}
+
+export async function createFeaturedVerseAction(
+  _prevState: AdminActionResult,
+  formData: FormData,
+): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const fields = readFeaturedVerseFields(formData);
+  const validationError = validateFeaturedVerseFields(fields);
+  if (validationError) return { error: validationError };
+
+  const supabase = createServiceClient();
+  const { error } = await supabase.from("featured_verses").insert(fields);
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/versiculos");
+  redirect("/admin/versiculos");
+}
+
+export async function updateFeaturedVerseAction(
+  id: string,
+  _prevState: AdminActionResult,
+  formData: FormData,
+): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const fields = readFeaturedVerseFields(formData);
+  const validationError = validateFeaturedVerseFields(fields);
+  if (validationError) return { error: validationError };
+
+  const supabase = createServiceClient();
+  const { error } = await supabase.from("featured_verses").update(fields).eq("id", id);
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/versiculos");
+  redirect("/admin/versiculos");
+}
+
+export async function deleteFeaturedVerseAction(id: string) {
+  await requireAdmin();
+  const supabase = createServiceClient();
+  await supabase.from("featured_verses").delete().eq("id", id);
+  revalidatePath("/admin/versiculos");
+}
