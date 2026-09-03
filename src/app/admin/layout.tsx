@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { LayoutDashboard, Users, BookText, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Users, BookText, ListChecks, ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin";
 
 const navItems = [
   { href: "/admin", label: "Visão geral", icon: LayoutDashboard },
   { href: "/admin/usuarios", label: "Usuários", icon: Users },
   { href: "/admin/conteudo", label: "Devocionais", icon: BookText },
+  { href: "/admin/planos", label: "Planos de leitura", icon: ListChecks },
 ];
 
 export default async function AdminLayout({

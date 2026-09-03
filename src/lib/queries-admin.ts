@@ -128,3 +128,56 @@ export async function getAdminDevotionalById(id: string) {
   const { data } = await supabase.from("devotionals").select("*").eq("id", id).maybeSingle();
   return data;
 }
+
+export interface AdminReadingPlanRow {
+  id: string;
+  slug: string;
+  title: string;
+  total_days: number;
+  is_premium: boolean;
+  daysRegistered: number;
+}
+
+export async function getAdminReadingPlans(): Promise<AdminReadingPlanRow[]> {
+  const supabase = createServiceClient();
+  const [{ data: plans }, { data: days }] = await Promise.all([
+    supabase.from("reading_plans").select("*").order("created_at", { ascending: false }),
+    supabase.from("reading_plan_days").select("plan_id"),
+  ]);
+
+  const countByPlan = new Map<string, number>();
+  for (const d of days ?? []) {
+    countByPlan.set(d.plan_id, (countByPlan.get(d.plan_id) ?? 0) + 1);
+  }
+
+  return (plans ?? []).map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    total_days: p.total_days,
+    is_premium: p.is_premium,
+    daysRegistered: countByPlan.get(p.id) ?? 0,
+  }));
+}
+
+export async function getAdminReadingPlanById(id: string) {
+  const supabase = createServiceClient();
+  const { data } = await supabase.from("reading_plans").select("*").eq("id", id).maybeSingle();
+  return data;
+}
+
+export async function getAdminReadingPlanDays(planId: string) {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("reading_plan_days")
+    .select("*")
+    .eq("plan_id", planId)
+    .order("day_number", { ascending: true });
+  return data ?? [];
+}
+
+export async function getAdminReadingPlanDayById(id: string) {
+  const supabase = createServiceClient();
+  const { data } = await supabase.from("reading_plan_days").select("*").eq("id", id).maybeSingle();
+  return data;
+}

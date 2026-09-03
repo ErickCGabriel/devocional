@@ -123,3 +123,176 @@ export async function deleteDevotionalAction(id: string) {
   await supabase.from("devotionals").delete().eq("id", id);
   revalidatePath("/admin/conteudo");
 }
+
+export interface ReadingPlanFormFields {
+  slug: string;
+  title: string;
+  description: string | null;
+  total_days: number;
+  is_premium: boolean;
+  cover_image_url: string | null;
+}
+
+function readReadingPlanFields(formData: FormData): ReadingPlanFormFields {
+  const description = String(formData.get("description") ?? "").trim();
+  const coverImageUrl = String(formData.get("cover_image_url") ?? "").trim();
+  return {
+    slug: String(formData.get("slug") ?? "").trim(),
+    title: String(formData.get("title") ?? "").trim(),
+    description: description || null,
+    total_days: Number(formData.get("total_days") ?? 0),
+    is_premium: formData.get("is_premium") === "on",
+    cover_image_url: coverImageUrl || null,
+  };
+}
+
+function validateReadingPlanFields(fields: ReadingPlanFormFields): string | null {
+  if (!fields.slug) return "Informe o slug (identificador na URL).";
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(fields.slug)) {
+    return "Slug inválido — use só letras minúsculas, números e hífen.";
+  }
+  if (!fields.title) return "Dê um título.";
+  if (!Number.isInteger(fields.total_days) || fields.total_days <= 0) {
+    return "Total de dias precisa ser um número inteiro maior que zero.";
+  }
+  return null;
+}
+
+export async function createReadingPlanAction(
+  _prevState: AdminActionResult,
+  formData: FormData,
+): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const fields = readReadingPlanFields(formData);
+  const validationError = validateReadingPlanFields(fields);
+  if (validationError) return { error: validationError };
+
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("reading_plans")
+    .insert(fields)
+    .select("id")
+    .single();
+
+  if (error) {
+    if (error.code === "23505") return { error: "Já existe um plano com esse slug." };
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/planos");
+  redirect(`/admin/planos/${data.id}`);
+}
+
+export async function updateReadingPlanAction(
+  id: string,
+  _prevState: AdminActionResult,
+  formData: FormData,
+): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const fields = readReadingPlanFields(formData);
+  const validationError = validateReadingPlanFields(fields);
+  if (validationError) return { error: validationError };
+
+  const supabase = createServiceClient();
+  const { error } = await supabase.from("reading_plans").update(fields).eq("id", id);
+
+  if (error) {
+    if (error.code === "23505") return { error: "Já existe um plano com esse slug." };
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/planos");
+  revalidatePath(`/admin/planos/${id}`);
+  redirect(`/admin/planos/${id}`);
+}
+
+export async function deleteReadingPlanAction(id: string) {
+  await requireAdmin();
+  const supabase = createServiceClient();
+  await supabase.from("reading_plans").delete().eq("id", id);
+  revalidatePath("/admin/planos");
+}
+
+export interface ReadingPlanDayFormFields {
+  day_number: number;
+  title: string;
+  passage_reference: string;
+  content: string | null;
+}
+
+function readReadingPlanDayFields(formData: FormData): ReadingPlanDayFormFields {
+  const content = String(formData.get("content") ?? "").trim();
+  return {
+    day_number: Number(formData.get("day_number") ?? 0),
+    title: String(formData.get("title") ?? "").trim(),
+    passage_reference: String(formData.get("passage_reference") ?? "").trim(),
+    content: content || null,
+  };
+}
+
+function validateReadingPlanDayFields(fields: ReadingPlanDayFormFields): string | null {
+  if (!Number.isInteger(fields.day_number) || fields.day_number <= 0) {
+    return "O número do dia precisa ser um inteiro maior que zero.";
+  }
+  if (!fields.title) return "Dê um título pro dia.";
+  if (!fields.passage_reference) return "Informe a referência da passagem.";
+  return null;
+}
+
+export async function createReadingPlanDayAction(
+  planId: string,
+  _prevState: AdminActionResult,
+  formData: FormData,
+): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const fields = readReadingPlanDayFields(formData);
+  const validationError = validateReadingPlanDayFields(fields);
+  if (validationError) return { error: validationError };
+
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("reading_plan_days")
+    .insert({ plan_id: planId, ...fields });
+
+  if (error) {
+    if (error.code === "23505") return { error: "Já existe um dia com esse número nesse plano." };
+    return { error: error.message };
+  }
+
+  revalidatePath(`/admin/planos/${planId}`);
+  redirect(`/admin/planos/${planId}`);
+}
+
+export async function updateReadingPlanDayAction(
+  dayId: string,
+  planId: string,
+  _prevState: AdminActionResult,
+  formData: FormData,
+): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const fields = readReadingPlanDayFields(formData);
+  const validationError = validateReadingPlanDayFields(fields);
+  if (validationError) return { error: validationError };
+
+  const supabase = createServiceClient();
+  const { error } = await supabase.from("reading_plan_days").update(fields).eq("id", dayId);
+
+  if (error) {
+    if (error.code === "23505") return { error: "Já existe um dia com esse número nesse plano." };
+    return { error: error.message };
+  }
+
+  revalidatePath(`/admin/planos/${planId}`);
+  redirect(`/admin/planos/${planId}`);
+}
+
+export async function deleteReadingPlanDayAction(dayId: string, planId: string) {
+  await requireAdmin();
+  const supabase = createServiceClient();
+  await supabase.from("reading_plan_days").delete().eq("id", dayId);
+  revalidatePath(`/admin/planos/${planId}`);
+}
