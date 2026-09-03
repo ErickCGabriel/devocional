@@ -40,6 +40,7 @@ export interface Database {
           genero: Genero | null;
           religiao: Religiao | null;
           objetivo: Objetivo | null;
+          is_admin: boolean;
           created_at: string;
           updated_at: string;
         };

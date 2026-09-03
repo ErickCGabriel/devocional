@@ -16,6 +16,7 @@ import {
   Settings,
   LogOut,
   Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 import { signOutAction } from "@/lib/actions-auth";
 import { cn } from "@/lib/utils";
@@ -32,7 +33,13 @@ const navItems = [
   { href: "/estatisticas", label: "Estatísticas", icon: BarChart3 },
 ];
 
-export function Sidebar({ isPremium }: { isPremium: boolean }) {
+export function Sidebar({
+  isPremium,
+  isAdmin,
+}: {
+  isPremium: boolean;
+  isAdmin?: boolean;
+}) {
   const pathname = usePathname();
 
   return (
@@ -105,6 +112,15 @@ export function Sidebar({ isPremium }: { isPremium: boolean }) {
           <Settings size={18} />
           Configurações
         </Link>
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent-soft"
+          >
+            <ShieldCheck size={18} />
+            Painel Admin
+          </Link>
+        )}
         <form action={signOutAction}>
           <button
             type="submit"

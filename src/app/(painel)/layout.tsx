@@ -20,11 +20,14 @@ export default async function PainelLayout({
     redirect("/login");
   }
 
-  const subscription = await getSubscription();
+  const [subscription, { data: profile }] = await Promise.all([
+    getSubscription(),
+    supabase.from("profiles").select("is_admin").eq("id", user.id).single(),
+  ]);
 
   return (
     <div className="flex min-h-screen flex-1 flex-col md:h-screen md:flex-row md:overflow-hidden">
-      <Sidebar isPremium={subscription.isPremium} />
+      <Sidebar isPremium={subscription.isPremium} isAdmin={profile?.is_admin ?? false} />
       <div className="flex flex-1 flex-col md:h-screen md:overflow-y-auto">
         <MobileNav />
         <main className="flex-1 bg-background px-4 py-5 pb-20 md:px-8 md:py-6 md:pb-6">
